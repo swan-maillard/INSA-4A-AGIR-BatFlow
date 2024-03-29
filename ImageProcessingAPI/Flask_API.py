@@ -68,6 +68,10 @@ def make_prediction(model, processed_img):
     probs, idxs = torch.sort(probs, descending=True)
     return probs, idxs
 
+@app.route("/")
+def home():
+    return "Home"
+
 #this is the endpoint for entering a file (with drag and drop from a local computer)
 @app.route("/upload_PNG_JPG" , methods=['POST'])
 def returnPrediction():
@@ -103,13 +107,6 @@ def returnPrediction():
         return jsonify({'message': 'Unsupported file type'}), 400
 
 
-
-
-@app.route("/")
-def home():
-    return "Home"
-
-
 #this is the endpoint for sending a prediction but with a base 64 image
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -136,17 +133,10 @@ def upload_image():
     prediction = display_predictions(probs[0].detach().numpy() , idxs[0].detach().numpy() )
     return jsonify({'prediction': prediction}), 201
 
-
-
-@app.route("/create-user",methods=["POST"])
-def create_user():
     if request.method == "POST":
         data = request.get_json()
         return jsonify(data),201
 
 
-
 if __name__ == "__main__":
     app.run(debug=True)
-
-
