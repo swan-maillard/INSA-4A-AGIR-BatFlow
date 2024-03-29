@@ -1,20 +1,15 @@
 #import streamlit as st
-import pandas as pd
 from flask import Flask, request, jsonify
-import seaborn as sns
 from PIL import Image
 from torchvision import transforms, models
 import torch
 import os
-import pandas as pd
 import torch.nn as nn
-import matplotlib.pyplot as plt
-import numpy as np
 import base64
 from PIL import Image
 from io import BytesIO
 
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -49,7 +44,6 @@ def display_predictions(probs, idxs):
     return labels[0]
 
 
-
 def convert_base64_to_rgb(image_base64):
     image_data = base64.b64decode(image_base64)
     image = Image.open(BytesIO(image_data))
@@ -66,8 +60,6 @@ def convert_to_rgb(file_path):
         rgb_file_path = os.path.splitext(file_path)[0] + '_rgb.jpg'
         rgb_image.save(rgb_file_path)
         return rgb_file_path
-
-
 
 
 def make_prediction(model, processed_img):
