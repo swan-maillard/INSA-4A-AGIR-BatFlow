@@ -1,14 +1,50 @@
 # BatFlow — AGIR Project
 
-## Image Processing Model
+## BatFlow Mobile Application (`/BatFlow/`)
 
-**Download the `model_fold_2.pth` and put it in the `ImageProcessingAPI/` folder.**
+### Requirements
+- **Node.js:** Make sure Node.js is installed on your system to run the application.
+- **React Native Environment:** Ensure you have a React Native development environment set up on your machine.
 
-https://huggingface.co/Khai2002/menstrual_image_model/tree/main
+### Installation
+- Run npm `install to install` the project dependencies.
+- Connect your Android device to your computer or set up an Android emulator.
+- Run `npm start` to build the application.
+- Run `npm run android` to deploy the application to your Android device or emulator.
 
-This is a pre-trained VGG16 model for used sanitory prodcucts image classification.
 
-## Image Processing API
+## Classification Model Training (`/ModelTraining/`)
+
+This script is used for training an image classification model using our custom dataset (used sanitory products – such as pads) and cross-validation with the VGG-16 pre-trained network since our dataset is small and artificial. 
+
+VGG-16 is a convolutional neural network that is 101 layers deep and was pre-trained on more than a million images from the ImageNet database.
+
+Our model is trained to classify the blood loss into one of three categories: `low`, `medium`, or `high`.
+
+### Setup and Dependencies
+- **Python Environment:** Ensure you have a Python environment set up with the required dependencies, including PIL, torchvision, torch, and other standard libraries.
+- **Dependencies Installation:** Install the necessary dependencies by running `pip install -r requirements.txt`
+
+### Data Preprocessing
+
+- **Data Augmentation:** The original images are contained in the `data/` folder. Because our dataset is very small, we artificially apply random augmentation to increase it. The augmented dataset is sored in `data/augmented/`
+- **Transformations:** Images are resized to 224x224 pixels and converted to tensors using PyTorch transformations.
+- **Custom Dataset:** A custom dataset class (`MenstrualDataset`) is defined to load images and labels from the specified folder. The label is extracted from the image name.
+
+### Training Process
+
+- **Cross-Validation:** The dataset is split into a specified number of folds (5 in this case) using Stratified K-Fold to ensure balanced class distribution in each fold.
+- **Model Architecture:** The pre-trained VGG-16 model is loaded, with the final fully connected layer replaced to accommodate the number of classes in the dataset.
+- **Loss Function and Optimizer:** Cross-entropy loss and stochastic gradient descent (SGD) optimizer are utilized for training.
+- **Model Saving:** The trained model is saved to `model_fold_2.pth`
+
+### Important Notes
+
+- The model was already trained, you can download `model_fold_2.pth` here : https://huggingface.co/Khai2002/menstrual_image_model/tree/main
+- The model `model_fold_2.pth` has to be placed in the `ImageProcessingAPI/` folder for the API to work.
+- Hyperparameters and model architecture can be tuned further for better performance.
+
+## Image Processing API (`/ImageProcessingAPI/`)
 
 This API provides endpoints for image classification. 
 It accepts images in PNG or JPG formats either through direct file upload or base64 encoding.
@@ -16,6 +52,7 @@ It accepts images in PNG or JPG formats either through direct file upload or bas
 ### Setup
 
 1. Install the required dependencies by running `pip install -r requirements.txt`.
+2. Ensure the model file `model_fold_2.pth` is present in the same directory as the application. Otherwise, read the **Classification Model Training** part of this README.
 2. Run the Flask application by executing `python app.py` - it should run on localhost:5000
 3. Put the API online, for example using ngrok by running `ngrok http 5000`
 
@@ -42,7 +79,6 @@ It accepts images in PNG or JPG formats either through direct file upload or bas
 
 - This API utilizes a pre-trained VGG16 model for image classification.
 - The model is configured to classify images into one of three categories: `low`, `medium`, or `high`.
-- Ensure the model file `model_fold_2.pth` is present in the same directory as the application.
 - This API is for demonstration purposes and may require modifications for production use, such as authentication, error handling, and scalability improvements.
 
 ## Figma
