@@ -13,38 +13,31 @@ const StatsScreen = ({ navigation, route }: any) => {
   const { index } = route.params;
 
   const data = useContext(DataContext);
-  const [lastCycle, setLastCycle] = useState<string[]>([]);
-  const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[][]>([]);
+  const [cycle, setCycle] = useState<string[]>([]);
+  const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[]>([]);
   const [scorePBAC, setScorePBAC] = useState(0);
   const [scoreSamanta, setScoreSamanta] = useState(0);
 
   const retrieveData = useCallback(() => {
-    setLastCycle(data.getLastCycle());
-    setAnswersPBAC(data.getAnswersPBAC());
-    setScorePBAC(data.getUserData('scoresPBAC', [0])[index]);
-    setScoreSamanta(data.getUserData('scoresSamanta', [0])[index]);
+    setCycle(data.getCycles()[index]);
+    setAnswersPBAC(data.getAnswersPBAC()[index]);
+    setScorePBAC(data.getUserData('scoresPBAC', [])[index]);
+    setScoreSamanta(data.getUserData('scoresSamanta', [])[index]);
   }, [data, index]);
 
   useEffect(() => retrieveData, [retrieveData]);
   navigation.addListener('focus', () => retrieveData());
 
   const duration = useMemo(() => {
-    if (lastCycle.length !== 2) {
+    if (cycle.length !== 2) {
       return 0;
     }
-    const start = new Date(lastCycle[0]);
-    const end = new Date(lastCycle[1]);
+    const start = new Date(cycle[0]);
+    const end = new Date(cycle[1]);
     return Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24) + 1);
-  }, [lastCycle]);
+  }, [cycle]);
 
-  const lastCyclePBAC = useMemo(() => {
-    if (answersPBAC.length === 0) {
-      return [];
-    }
-    return answersPBAC[answersPBAC.length - 1];
-  }, [answersPBAC]);
-
-  const isHealthy = useMemo(() => scorePBAC < 90 && scoreSamanta < 3, [scorePBAC, scoreSamanta]);
+  const isHealthy = useMemo(() => scorePBAC < 90 && (scoreSamanta < 3 || !scoreSamanta), [scorePBAC, scoreSamanta]);
 
   const customStyles = StyleSheet.create({
     container: {
@@ -102,13 +95,13 @@ const StatsScreen = ({ navigation, route }: any) => {
                     Cycle Overview
                   </CustomText>
                   <CustomText>
-                    {new Date(lastCycle[0]).toLocaleDateString('en-us', {
+                    {new Date(cycle[0]).toLocaleDateString('en-us', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
                     })}{' '}
                     -
-                    {new Date(lastCycle[1]).toLocaleDateString('en-us', {
+                    {new Date(cycle[1]).toLocaleDateString('en-us', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
@@ -166,7 +159,7 @@ const StatsScreen = ({ navigation, route }: any) => {
                 >
                   <View>
                     <CustomText style={{ ...styles.durationStat, fontSize: 22 }}>
-                      {lastCyclePBAC.length} protection(s) used
+                      {answersPBAC.length} protection(s) used
                     </CustomText>
                   </View>
                 </LinearGradient>
@@ -188,7 +181,9 @@ const StatsScreen = ({ navigation, route }: any) => {
                     </CustomText>
                   </View>
                   <View style={styles.scoreContainer}>
-                    <CustomText style={styles.descriptionStat}>Your SAMANTA score is</CustomText>
+                    <CustomText style={styles.descriptionStat}>
+                      Your SAMANTA score is{!scoreSamanta && ' not known yet'}
+                    </CustomText>
                     <CustomText
                       style={{
                         ...styles.bold,

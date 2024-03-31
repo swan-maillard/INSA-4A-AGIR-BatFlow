@@ -1,14 +1,14 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, TextStyle, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import { Calendar } from 'react-native-calendars';
 import Header from '../components/Header';
 import NavigationBar from '../components/NavigationBar.tsx';
 import LinearGradient from 'react-native-linear-gradient';
 import { DataContext } from '../context/DataContext.tsx';
 import Svg, { Path } from 'react-native-svg';
+import AppCalendar from '../components/AppCalendar.tsx';
 
 const StatsScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
@@ -35,56 +35,9 @@ const StatsScreen = ({ navigation }: any) => {
   const hasStats = useMemo(() => cycles.length > 0 && cycles[0].length === 2, [cycles]);
   const isHealthy = useMemo(() => scorePBAC < 90 && scoreSamanta < 3, [scorePBAC, scoreSamanta]);
 
-  const dayComponent = ({ date, state, marking }: any) => {
-    let style: TextStyle = {
-      color: state === 'disabled' ? 'gray' : 'black',
-      width: 50,
-      height: 50,
-      position: 'relative',
-      borderWidth: 1,
-      borderColor: colors.grey,
-      marginVertical: -7,
-    };
-
-    if (state === 'today') {
-      style = {
-        ...style,
-        backgroundColor: colors.primary,
-      };
-    }
-
-    return (
-      <Pressable style={style} onPress={() => (marking && marking.onPress?.()) || null}>
-        <CustomText
-          style={{ textAlign: 'center', lineHeight: 45, color: state === 'today' ? colors.white : colors.black }}
-        >
-          {date.day}
-        </CustomText>
-        <View
-          style={{
-            flexDirection: 'row',
-            position: 'absolute',
-            gap: 3,
-            bottom: 2,
-            width: '100%',
-            justifyContent: 'center',
-          }}
-        >
-          {marking?.period && <Image source={require('./../assets/blood.png')} style={{ width: 10, height: 15 }} />}
-          {marking?.ovulation && (
-            <Image source={require('./../assets/fertility.png')} style={{ width: 15, height: 15 }} />
-          )}
-          {marking?.optimalOvulation && (
-            <Image source={require('./../assets/heart.png')} style={{ width: 13, height: 13 }} />
-          )}
-        </View>
-      </Pressable>
-    );
-  };
-
   // Fonction pour transformer des périodes (tableaux avec date de début et date de fin)
   // en markedDates (https://github.com/wix/react-native-calendars?tab=readme-ov-file#customize-the-appearance-of-the-calendar)
-  const transformPeriodsToMarkedDates = useMemo(() => {
+  const computeCalendarDates = useMemo(() => {
     const periods = cycles.map(([start, end]) => [new Date(start), new Date(end)]);
 
     const markedDates: { [key: string]: any } = {};
@@ -272,28 +225,13 @@ const StatsScreen = ({ navigation }: any) => {
                   >
                     Check the calendar of your menstrual cycles
                   </CustomText>
-                  <View style={{ width: 350 }}>
-                    <Calendar
-                      onDayPress={() => navigation.navigate('Overview')}
-                      maxDate={new Date().toLocaleDateString('en-CA')}
-                      disabledByDefault={true}
-                      disableAllTouchEventsForInactiveDays={true}
-                      markingType={'period'}
-                      markedDates={{
-                        ...transformPeriodsToMarkedDates,
-                      }}
-                      theme={{
-                        backgroundColor: colors.white,
-                        calendarBackground: colors.white,
-                        textSectionTitleColor: colors.primary,
-                        arrowColor: colors.primary,
-                        disabledArrowColor: 'gray',
-                        monthTextColor: colors.primary,
-                        indicatorColor: colors.primary,
-                      }}
-                      dayComponent={dayComponent}
-                    />
-                  </View>
+                  <AppCalendar
+                    markedDates={computeCalendarDates}
+                    selectedDate={new Date().toLocaleString('en-CA')}
+                    options={{
+                      disabledByDefault: true,
+                    }}
+                  />
                 </>
               ) : (
                 <Pressable

@@ -55,12 +55,11 @@ const ProfileScreen = ({ navigation }: any) => {
 
   // L'utilisateur termine son cycle en cours
   const endCycle = () => {
-    data.endCycle(new Date());
-    retrieveData();
+    navigation.navigate('CalendarEndCycle');
   };
 
   const startCycle = () => {
-    navigation.navigate('Calendar');
+    navigation.navigate('CalendarStartCycle');
   };
 
   // Style custom
@@ -254,7 +253,8 @@ const ProfileScreen = ({ navigation }: any) => {
                         ...styles.bold,
                       }}
                     >
-                      Your next cycle is due in {daysBeforeNextCycle} day{daysBeforeNextCycle !== 1 && 's'}
+                      Your next cycle is due in {Math.round(daysBeforeNextCycle)} day
+                      {Math.round(daysBeforeNextCycle) !== 1 && 's'}
                     </CustomText>
                     <CustomText
                       style={{

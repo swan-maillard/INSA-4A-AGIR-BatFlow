@@ -43,7 +43,6 @@ export default class DataManager {
 
     userData[key] = newValue;
 
-    console.log(this._data.swan);
     this._setData(this._data);
   }
 
@@ -81,10 +80,8 @@ export default class DataManager {
         const end = new Date(cycles[cycles.length - 2][1]);
         const start = new Date(cycles[cycles.length - 2][0]);
         const gapDuration = Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
-        console.log('Gap duration', gapDuration);
         averageGapDuration = (averageGapDuration * (cycles.length - 1) + gapDuration) / cycles.length;
         averageGapDuration = Math.round(averageGapDuration * 10) / 10;
-        console.log('Average', averageGapDuration);
         this.setUserData('averageGapDuration', averageGapDuration);
       }
     }

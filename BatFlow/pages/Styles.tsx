@@ -19,6 +19,7 @@ const colors = {
   white,
   grey,
   green,
+  pink,
 };
 
 // @ts-ignore

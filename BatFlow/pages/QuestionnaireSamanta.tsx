@@ -32,7 +32,6 @@ const QuestionnaireSamanta = ({ route, navigation }: any) => {
   const saveAnswers = useCallback(
     (allAnswers: boolean[]) => {
       data.addAnswersSamanta(allAnswers);
-      console.log('Submitted Answers:', data.getAnswersSamanta()[data.getAnswersSamanta().length - 1]);
       const s = allAnswers.map((val) => (val ? 1 : 0));
       const score = s[0] * 3 + s[1] + s[2] * 3 + s[3] + s[4] + s[5];
 

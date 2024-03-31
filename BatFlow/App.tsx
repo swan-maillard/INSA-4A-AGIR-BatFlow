@@ -5,7 +5,7 @@ import questionsSamanta from './content/QuestionsSamanta.ts';
 import HomeScreen from './pages/HomeScreen';
 import LoginScreen from './pages/LoginScreen';
 import ProfileScreen from './pages/ProfileScreen';
-import CalendarScreen from './pages/CalendarScreen';
+import CalendarStartCycleScreen from './pages/CalendarStartCycleScreen.tsx';
 import StatsScreen from './pages/StatsScreen';
 import InformationScreen from './pages/InformationScreen';
 import QuestionnairePBAC from './pages/QuestionnairePBAC';
@@ -19,6 +19,7 @@ import AddSanitoryProductScreen from './pages/AddSanitoryProductScreen.tsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Data, DataContext } from './context/DataContext.tsx';
 import DataManager from './data/DataManager.ts';
+import CalendarEndCycleScreen from './pages/CalendarEndCycleScreen.tsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,7 +46,8 @@ const App = () => {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Calendar" component={CalendarScreen} />
+          <Stack.Screen name="CalendarStartCycle" component={CalendarStartCycleScreen} />
+          <Stack.Screen name="CalendarEndCycle" component={CalendarEndCycleScreen} />
           <Stack.Screen name="Stats" component={StatsScreen} />
           <Stack.Screen name="Overview" component={CycleOverview} initialParams={{ index: 0 }} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
