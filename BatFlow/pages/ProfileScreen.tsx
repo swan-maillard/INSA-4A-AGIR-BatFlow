@@ -130,7 +130,12 @@ const ProfileScreen = ({ navigation }: any) => {
                         ...styles.bold,
                       }}
                     >
-                      Your cycle has started last {new Date(lastCycle[0]).toDateString()}
+                      Your cycle has started on the{' '}
+                      {new Date(lastCycle[0]).toLocaleDateString('en-us', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
                     </CustomText>
                     <CustomText
                       style={{

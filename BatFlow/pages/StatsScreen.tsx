@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, TextStyle, View } from 'react-native';
 import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
@@ -16,6 +16,7 @@ const StatsScreen = ({ navigation }: any) => {
   const [currentUser, setCurrentUser] = useState('');
   const [cycles, setCycles] = useState<string[][]>([]);
   const [duration, setDuration] = useState<number>(0);
+  const [gapDuration, setGapDuration] = useState<number>(0);
   const [scorePBAC, setScorePBAC] = useState<number>(0);
   const [scoreSamanta, setScoreSamanta] = useState<number>(0);
 
@@ -23,6 +24,7 @@ const StatsScreen = ({ navigation }: any) => {
     setCurrentUser(data.getUser);
     setCycles(data.getCycles());
     setDuration(data.getUserData('averageDuration', 0));
+    setGapDuration(data.getUserData('averageGapDuration', 28));
     setScorePBAC(data.getUserData('averagePBAC', 0));
     setScoreSamanta(data.getUserData('averageSamanta', 0));
   }, [data]);
@@ -33,65 +35,113 @@ const StatsScreen = ({ navigation }: any) => {
   const hasStats = useMemo(() => cycles.length > 0 && cycles[0].length === 2, [cycles]);
   const isHealthy = useMemo(() => scorePBAC < 90 && scoreSamanta < 3, [scorePBAC, scoreSamanta]);
 
+  const dayComponent = ({ date, state, marking }: any) => {
+    let style: TextStyle = {
+      color: state === 'disabled' ? 'gray' : 'black',
+      width: 50,
+      height: 50,
+      position: 'relative',
+      borderWidth: 1,
+      borderColor: colors.grey,
+      marginVertical: -7,
+    };
+
+    if (state === 'today') {
+      style = {
+        ...style,
+        backgroundColor: colors.primary,
+      };
+    }
+
+    return (
+      <Pressable style={style} onPress={() => (marking && marking.onPress?.()) || null}>
+        <CustomText
+          style={{ textAlign: 'center', lineHeight: 45, color: state === 'today' ? colors.white : colors.black }}
+        >
+          {date.day}
+        </CustomText>
+        <View
+          style={{
+            flexDirection: 'row',
+            position: 'absolute',
+            gap: 3,
+            bottom: 2,
+            width: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          {marking?.period && <Image source={require('./../assets/blood.png')} style={{ width: 10, height: 15 }} />}
+          {marking?.ovulation && (
+            <Image source={require('./../assets/fertility.png')} style={{ width: 15, height: 15 }} />
+          )}
+          {marking?.optimalOvulation && (
+            <Image source={require('./../assets/heart.png')} style={{ width: 13, height: 13 }} />
+          )}
+        </View>
+      </Pressable>
+    );
+  };
+
   // Fonction pour transformer des périodes (tableaux avec date de début et date de fin)
   // en markedDates (https://github.com/wix/react-native-calendars?tab=readme-ov-file#customize-the-appearance-of-the-calendar)
-  function transformPeriodsToMarkedDates(periods: string[][] | Date[][]) {
-    // Faux cycles pour les tests
-    const fakePeriods = [
-      [new Date('2024-02-10'), new Date('2024-02-15')],
-      [new Date('2024-03-12'), new Date('2024-03-17')],
-    ];
-
-    periods = periods.map(([start, end]) => [new Date(start), new Date(end)]);
-    // On rajoute les faux cycles à la liste de cycles
-    periods = [...fakePeriods, ...periods];
+  const transformPeriodsToMarkedDates = useMemo(() => {
+    const periods = cycles.map(([start, end]) => [new Date(start), new Date(end)]);
 
     const markedDates: { [key: string]: any } = {};
 
     // Pour chaque cycle défini par sa date de début et de fin
-    periods.forEach(([start, end]) => {
+    periods.forEach(([start, end], index) => {
       // On parcourt tous les jours sur cette période
       for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
         const formattedDate = date.toISOString().split('T')[0];
 
-        // Il y a différents cas d'affichage
-        if (date.getTime() === start.getTime() && date.getTime() === end.getTime()) {
-          markedDates[formattedDate] = {
-            selected: true,
-            startingDay: true,
-            endingDay: true,
-            color: colors.secondary,
-            disableTouchEvent: true,
-          };
-        } else if (date.getTime() === start.getTime()) {
-          // S'il s'agit du premier jour du cycle
-          markedDates[formattedDate] = {
-            selected: true,
-            startingDay: true,
-            color: colors.secondary,
-            disableTouchEvent: true,
-          };
-        } else if (date.getTime() === end.getTime()) {
-          // // S'il s'agit du dernier jour du cycle
-          markedDates[formattedDate] = {
-            selected: true,
-            endingDay: true,
-            color: colors.secondary,
-            disableTouchEvent: true,
-          };
-        } else {
-          // Sinon il s'agit d'un jour au milieu
-          markedDates[formattedDate] = {
-            selected: true,
-            color: colors.secondary,
-            disableTouchEvent: true,
-          };
-        }
+        markedDates[formattedDate] = {
+          period: true,
+          onPress: () => navigation.navigate('Overview', { index }),
+        };
       }
     });
 
+    if (cycles.length > 0) {
+      const lastCycle = cycles[cycles.length - 1];
+
+      if (lastCycle.length === 2) {
+        let periodDate = new Date(lastCycle[1]);
+
+        for (let i = 0; i < 5; ++i) {
+          let ovulationDate = new Date(periodDate);
+          periodDate.setDate(periodDate.getDate() + Math.floor(gapDuration));
+          ovulationDate.setDate(ovulationDate.getDate() + Math.round(gapDuration / 2) - 3);
+
+          for (let j = 0; j < Math.ceil(duration); ++j) {
+            const formattedDate = periodDate.toISOString().split('T')[0];
+            markedDates[formattedDate] = {
+              period: true,
+            };
+            periodDate.setDate(periodDate.getDate() + 1);
+          }
+
+          for (let j = 0; j < 5; ++j) {
+            const formattedDate = ovulationDate.toISOString().split('T')[0];
+
+            markedDates[formattedDate] = {
+              ovulation: true,
+            };
+
+            if (j === 3) {
+              markedDates[formattedDate] = {
+                optimalOvulation: true,
+              };
+            }
+
+            ovulationDate.setDate(ovulationDate.getDate() + 1);
+          }
+        }
+      }
+    }
+
     return markedDates;
-  }
+  }, [cycles]);
 
   const customStyles = StyleSheet.create({
     container: {
@@ -222,33 +272,28 @@ const StatsScreen = ({ navigation }: any) => {
                   >
                     Check the calendar of your menstrual cycles
                   </CustomText>
-                  <Calendar
-                    onDayPress={() => navigation.navigate('Overview')}
-                    maxDate={new Date().toLocaleDateString('en-CA')}
-                    markingType={'period'}
-                    markedDates={{
-                      ...transformPeriodsToMarkedDates(cycles),
-                    }}
-                    style={{
-                      width: '100%',
-                    }}
-                    theme={{
-                      backgroundColor: colors.white,
-                      calendarBackground: colors.white,
-                      textSectionTitleColor: colors.primary,
-                      selectedDayBackgroundColor: colors.primary,
-                      selectedDayTextColor: colors.white,
-                      todayTextColor: colors.primary,
-                      dayTextColor: colors.black,
-                      textDisabledColor: 'gray',
-                      dotColor: colors.primary,
-                      selectedDotColor: colors.white,
-                      arrowColor: colors.primary,
-                      disabledArrowColor: 'gray',
-                      monthTextColor: colors.primary,
-                      indicatorColor: colors.primary,
-                    }}
-                  />
+                  <View style={{ width: 350 }}>
+                    <Calendar
+                      onDayPress={() => navigation.navigate('Overview')}
+                      maxDate={new Date().toLocaleDateString('en-CA')}
+                      disabledByDefault={true}
+                      disableAllTouchEventsForInactiveDays={true}
+                      markingType={'period'}
+                      markedDates={{
+                        ...transformPeriodsToMarkedDates,
+                      }}
+                      theme={{
+                        backgroundColor: colors.white,
+                        calendarBackground: colors.white,
+                        textSectionTitleColor: colors.primary,
+                        arrowColor: colors.primary,
+                        disabledArrowColor: 'gray',
+                        monthTextColor: colors.primary,
+                        indicatorColor: colors.primary,
+                      }}
+                      dayComponent={dayComponent}
+                    />
+                  </View>
                 </>
               ) : (
                 <Pressable

@@ -47,7 +47,7 @@ const App = () => {
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Calendar" component={CalendarScreen} />
           <Stack.Screen name="Stats" component={StatsScreen} />
-          <Stack.Screen name="Overview" component={CycleOverview} />
+          <Stack.Screen name="Overview" component={CycleOverview} initialParams={{ index: 0 }} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="AddSanitoryProduct" component={AddSanitoryProductScreen} />
           <Stack.Screen name="Information" component={InformationScreen} />

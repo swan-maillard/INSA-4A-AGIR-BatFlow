@@ -9,7 +9,9 @@ import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnswersPBAC, DataContext } from '../context/DataContext.tsx';
 
-const StatsScreen = ({ navigation }: any) => {
+const StatsScreen = ({ navigation, route }: any) => {
+  const { index } = route.params;
+
   const data = useContext(DataContext);
   const [lastCycle, setLastCycle] = useState<string[]>([]);
   const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[][]>([]);
@@ -19,9 +21,9 @@ const StatsScreen = ({ navigation }: any) => {
   const retrieveData = useCallback(() => {
     setLastCycle(data.getLastCycle());
     setAnswersPBAC(data.getAnswersPBAC());
-    setScorePBAC(data.getUserData('scoresPBAC', [0])[data.getUserData('scoresPBAC', [0]).length - 1]);
-    setScoreSamanta(data.getUserData('scoresSamanta', [0])[data.getUserData('scoresSamanta', [0]).length - 1]);
-  }, [data]);
+    setScorePBAC(data.getUserData('scoresPBAC', [0])[index]);
+    setScoreSamanta(data.getUserData('scoresSamanta', [0])[index]);
+  }, [data, index]);
 
   useEffect(() => retrieveData, [retrieveData]);
   navigation.addListener('focus', () => retrieveData());
@@ -99,7 +101,19 @@ const StatsScreen = ({ navigation }: any) => {
                   >
                     Cycle Overview
                   </CustomText>
-                  <CustomText>May 3rd 2023 - May 8th 2023</CustomText>
+                  <CustomText>
+                    {new Date(lastCycle[0]).toLocaleDateString('en-us', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}{' '}
+                    -
+                    {new Date(lastCycle[1]).toLocaleDateString('en-us', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </CustomText>
                 </View>
               </View>
               <View
