@@ -12,7 +12,7 @@ import { AnswersPBAC, DataContext } from '../context/DataContext.tsx';
 const StatsScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
   const [lastCycle, setLastCycle] = useState<string[]>([]);
-  const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[]>([]);
+  const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[][]>([]);
   const [scorePBAC, setScorePBAC] = useState(0);
   const [scoreSamanta, setScoreSamanta] = useState(0);
 
@@ -32,8 +32,17 @@ const StatsScreen = ({ navigation }: any) => {
     }
     const start = new Date(lastCycle[0]);
     const end = new Date(lastCycle[1]);
-    return Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+    return Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24) + 1);
   }, [lastCycle]);
+
+  const lastCyclePBAC = useMemo(() => {
+    if (answersPBAC.length === 0) {
+      return [];
+    }
+    return answersPBAC[answersPBAC.length - 1];
+  }, [answersPBAC]);
+
+  const isHealthy = useMemo(() => scorePBAC < 90 && scoreSamanta < 3, [scorePBAC, scoreSamanta]);
 
   const customStyles = StyleSheet.create({
     container: {
@@ -93,62 +102,117 @@ const StatsScreen = ({ navigation }: any) => {
                   <CustomText>May 3rd 2023 - May 8th 2023</CustomText>
                 </View>
               </View>
-              <LinearGradient
-                colors={['#fa7091', '#faa8ba']}
-                useAngle={true}
-                angle={140}
+              <View
                 style={{
-                  ...styles.periodDurationContainer,
+                  width: '100%',
                   flexDirection: 'row',
-                  gap: 20,
                   alignItems: 'center',
+                  gap: 20,
                 }}
               >
                 <Image source={require('./../assets/blood.png')} style={{ width: 30, height: 44 }} />
-                <View>
-                  <CustomText style={styles.textDurationStat}>Your period lasted...</CustomText>
-                  <CustomText style={styles.durationStat}>{duration} days</CustomText>
-                </View>
-              </LinearGradient>
+                <LinearGradient
+                  colors={['#fc0e46', '#fd6085']}
+                  useAngle={true}
+                  angle={140}
+                  style={{
+                    ...styles.periodDurationContainer,
+                    flexDirection: 'row',
+                    gap: 20,
+                    alignItems: 'center',
+                    width: '85%',
+                  }}
+                >
+                  <View>
+                    <CustomText style={styles.textDurationStat}>Your period lasted...</CustomText>
+                    <CustomText style={styles.durationStat}>{duration} days</CustomText>
+                  </View>
+                </LinearGradient>
+              </View>
+
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 20,
+                }}
+              >
+                <LinearGradient
+                  colors={['#fa7091', '#faa8ba']}
+                  useAngle={true}
+                  angle={140}
+                  style={{
+                    ...styles.periodDurationContainer,
+                    flexDirection: 'row',
+                    gap: 20,
+                    alignItems: 'center',
+                    width: '80%',
+                  }}
+                >
+                  <View>
+                    <CustomText style={{ ...styles.durationStat, fontSize: 22 }}>
+                      {lastCyclePBAC.length} protection(s) used
+                    </CustomText>
+                  </View>
+                </LinearGradient>
+                <Image source={require('./../assets/towel.png')} style={{ width: 50, height: 50 }} />
+              </View>
               <View style={styles.statsContainer}>
                 <>
                   <View style={styles.scoreContainer}>
-                    <CustomText style={styles.descriptionStat}>
-                      Cumulated PBAC : {scorePBAC} Number of products : {answersPBAC.length}
+                    <CustomText style={styles.descriptionStat}>Your PBAC score is</CustomText>
+                    <CustomText
+                      style={{
+                        ...styles.bold,
+                        fontSize: 25,
+                        textAlign: 'center',
+                        color: scorePBAC < 90 ? colors.green : colors.primary,
+                      }}
+                    >
+                      {scorePBAC}
                     </CustomText>
                   </View>
                   <View style={styles.scoreContainer}>
-                    <CustomText style={styles.descriptionStat}>
-                      A score of {scorePBAC} may be a little bit high. (Write a little text based on the documentation)
+                    <CustomText style={styles.descriptionStat}>Your SAMANTA score is</CustomText>
+                    <CustomText
+                      style={{
+                        ...styles.bold,
+                        fontSize: 25,
+                        textAlign: 'center',
+                        color: scoreSamanta < 3 ? colors.green : colors.primary,
+                      }}
+                    >
+                      {scoreSamanta}
                     </CustomText>
                   </View>
                 </>
               </View>
-              <View style={styles.samanthaStatsContainer}>
-                <>
-                  <View style={styles.samanthaScoreContainer}>
-                    <CustomText style={styles.samanthaDescriptionStat}>
-                      SAMANTA Score :{'\n'}
-                      <CustomText style={styles.scoreValue}> {scoreSamanta}</CustomText>{' '}
-                    </CustomText>
-                  </View>
-                  <View style={styles.samanthaScoreContainer}>
-                    <CustomText style={styles.samanthaDescriptionStat}>
-                      A score of 24 means... (Write a little text based on the documentation)
-                    </CustomText>
-                  </View>
-                </>
+              <View style={{ gap: 10, alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                  {isHealthy && (
+                    <Image source={require('./../assets/fertility.png')} style={{ width: 30, height: 30 }} />
+                  )}
+                  <CustomText
+                    style={{
+                      ...styles.bold,
+                      color: isHealthy ? colors.green : colors.primary,
+                      fontSize: 20,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {isHealthy
+                      ? 'Your period looks perfectly healthy!'
+                      : 'You might suffer from Heavy Menstrual Bleeding. Please seek medical advice.'}
+                  </CustomText>
+                </View>
+
+                <CustomText style={{ textAlign: 'center' }}>
+                  A PBAC score <CustomText style={styles.bold}>greater than 90</CustomText> or a Samanta score{' '}
+                  <CustomText style={styles.bold}>greater than 3</CustomText> might indicate that you suffer from Heavy
+                  Menstrual Bleeding.
+                </CustomText>
               </View>
-              <CustomText
-                style={{
-                  textAlign: 'center',
-                  fontFamily: 'FiraSans-Medium',
-                }}
-              >
-                This is your 4th highest PBAC Score.
-                {'\n'}
-                This is your 6th highest Samantha Score.
-              </CustomText>
             </View>
           </View>
         </ScrollView>

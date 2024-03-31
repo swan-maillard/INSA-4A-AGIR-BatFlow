@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import NavigationBar from '../components/NavigationBar';
@@ -7,31 +7,59 @@ import CustomText from '../components/CustomText';
 import Header from '../components/Header';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
-import { DataContext } from '../context/DataContext.tsx';
-import DataManager from '../data/DataManager.ts';
+import { AnswersPBAC, DataContext } from '../context/DataContext.tsx';
 
 // Page profil de l'utilisateur
 const ProfileScreen = ({ navigation }: any) => {
-  const Data = useContext(DataContext);
-  const [cycleEnded, setCycleEnded] = useState(false);
-
+  const data = useContext(DataContext);
+  const [cycles, setCycles] = useState<string[][]>([]);
   const [lastCycle, setLastCycle] = useState<string[]>([]);
+  const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[][]>([]);
+  const [scoresSamanta, setScoresSamanta] = useState<number[]>([]);
 
   const retrieveData = useCallback(() => {
-    setLastCycle(Data.getLastCycle());
-  }, [Data]);
+    setCycles([...data.getCycles()]);
+    setAnswersPBAC([...data.getAnswersPBAC()]);
+    setLastCycle(data.getLastCycle());
+    setScoresSamanta([...data.getUserData('scoresSamanta', [])]);
+  }, [data]);
 
   useEffect(() => retrieveData, [retrieveData]);
   navigation.addListener('focus', () => retrieveData());
 
+  const numberProtections = useMemo(() => {
+    if (answersPBAC.length === 0) {
+      return 0;
+    }
+    return answersPBAC[answersPBAC.length - 1].length;
+  }, [answersPBAC]);
+
+  const waitingSamanta = useMemo(() => {
+    return lastCycle.length === 2 && scoresSamanta.length < cycles.length;
+  }, [lastCycle.length, scoresSamanta.length, cycles.length]);
+
+  const noDataOnCycle = useMemo(() => lastCycle.length === 0, [lastCycle.length]);
+  const noCurrentCycle = useMemo(() => lastCycle.length === 2, [lastCycle.length]);
+  const isCurrentCycle = useMemo(() => lastCycle.length === 1, [lastCycle.length]);
+
+  const daysBeforeNextCycle = useMemo(() => {
+    if (noDataOnCycle) return 0;
+
+    const lastEndDate = new Date(lastCycle[1] || new Date());
+    const today = new Date();
+    const diff = Math.floor((today.getTime() - lastEndDate.getTime()) / (1000 * 3600 * 24));
+    const gapDuration = data.getUserData<number>('averageGapDuration', 28);
+
+    return gapDuration - diff;
+  }, [data, lastCycle, noDataOnCycle]);
+
   // L'utilisateur termine son cycle en cours
   const endCycle = () => {
-    Data.endCycle(new Date());
-    setCycleEnded(true);
+    data.endCycle(new Date());
+    retrieveData();
   };
 
   const startCycle = () => {
-    setCycleEnded(false);
     navigation.navigate('Calendar');
   };
 
@@ -84,7 +112,7 @@ const ProfileScreen = ({ navigation }: any) => {
         <ScrollView style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <View style={customStyles.actions}>
-              {lastCycle.length === 1 ? (
+              {isCurrentCycle && (
                 <>
                   <LinearGradient
                     colors={['#fc0e46', '#fd6085']}
@@ -114,6 +142,34 @@ const ProfileScreen = ({ navigation }: any) => {
                       Your period still likely is heavy, and you may have cramps or stomach pain.
                     </CustomText>
                   </LinearGradient>
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 20,
+                    }}
+                  >
+                    <LinearGradient
+                      colors={['#fa7091', '#faa8ba']}
+                      useAngle={true}
+                      angle={140}
+                      style={{
+                        ...styles.periodDurationContainer,
+                        flexDirection: 'row',
+                        gap: 20,
+                        alignItems: 'center',
+                        width: '80%',
+                      }}
+                    >
+                      <View>
+                        <CustomText style={{ ...styles.durationStat, fontSize: 22 }}>
+                          {numberProtections} protection(s) used
+                        </CustomText>
+                      </View>
+                    </LinearGradient>
+                    <Image source={require('./../assets/towel.png')} style={{ width: 50, height: 50 }} />
+                  </View>
                   <Pressable
                     style={{
                       ...styles.button,
@@ -166,100 +222,56 @@ const ProfileScreen = ({ navigation }: any) => {
                       <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
                     </Svg>
                   </Pressable>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={[customStyles.cumulativePBACContainer, { flex: 1, marginRight: 20 }]}>
-                      <CustomText
-                        style={{
-                          fontSize: 15,
-                          fontWeight: 'bold',
-                          fontFamily: 'FiraSans-Light',
-                        }}
-                      >
-                        Cumulated PBAC
-                      </CustomText>
-                      <CustomText
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 'bold',
-                          fontFamily: 'FiraSans-Light',
-                          textAlign: 'right',
-                        }}
-                      >
-                        24
-                      </CustomText>
-                      <CustomText
-                        style={{
-                          fontSize: 15,
-                          fontWeight: 'bold',
-                          fontFamily: 'FiraSans-Light',
-                        }}
-                      >
-                        Number of products
-                      </CustomText>
-                      <CustomText
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 'bold',
-                          fontFamily: 'FiraSans-Light',
-                          textAlign: 'right',
-                        }}
-                      >
-                        5
-                      </CustomText>
-                    </View>
-                    <View style={[customStyles.cumulativePBACContainer, { flex: 1 }]}>
-                      <CustomText
-                        style={{
-                          fontSize: 14,
-                          fontFamily: 'FiraSans-Light',
-                        }}
-                      >
-                        A score of 24 is not alarming. Menstrual loss is less than 80mL. Keep updating the products you
-                        use to maintain a relevant analysis!
-                      </CustomText>
-                    </View>
-                  </View>
                 </>
-              ) : (
+              )}
+
+              {noCurrentCycle && (
                 <>
-                  {cycleEnded ? (
+                  <LinearGradient
+                    colors={
+                      daysBeforeNextCycle < 7
+                        ? daysBeforeNextCycle < 3
+                          ? ['#fc0e46', '#fd6085'] // Lower than 3 days
+                          : ['#fb4977', '#f892a7'] // Lower than 7 days
+                        : ['#fa7091', '#faa8ba']
+                    }
+                    useAngle={true}
+                    angle={140}
+                    style={{
+                      ...styles.button,
+                      ...customStyles.cycleInfoContainer,
+                    }}
+                  >
+                    <CustomText
+                      style={{
+                        color: colors.white,
+                        fontSize: 22,
+                        ...styles.bold,
+                      }}
+                    >
+                      Your next cycle is due in {daysBeforeNextCycle} day{daysBeforeNextCycle !== 1 && 's'}
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        color: colors.white,
+                        fontSize: 14,
+                        fontFamily: 'FiraSans-Light',
+                        marginTop: 10,
+                      }}
+                    >
+                      You may experience premenstrual symptoms such as cramps, fatigue, mood swings, breast tenderness,
+                      and water retention.
+                    </CustomText>
+                  </LinearGradient>
+                  {waitingSamanta && (
                     <>
-                      <LinearGradient
-                        colors={['#f87e9a', '#f8b5c3']}
-                        useAngle={true}
-                        angle={140}
-                        style={{
-                          ...styles.button,
-                          ...customStyles.cycleInfoContainer,
-                        }}
-                      >
-                        <CustomText
-                          style={{
-                            color: colors.white,
-                            fontSize: 22,
-                            ...styles.bold,
-                          }}
-                        >
-                          Your next cycle is due in 23 days
-                        </CustomText>
-                        <CustomText
-                          style={{
-                            color: colors.white,
-                            fontSize: 14,
-                            fontFamily: 'FiraSans-Light',
-                          }}
-                        >
-                          You may notice increased energy and a generally uplifted mood as your body prepares for
-                          ovulation.
-                        </CustomText>
-                      </LinearGradient>
                       <View style={{ width: '100%' }}>
                         <CustomText
                           style={{
                             textAlign: 'center',
                           }}
                         >
-                          Don't forget to answer the{' '}
+                          Don't forget to quickly answer the{' '}
                           <CustomText style={styles.highlight}>SAMANTA questionnaire</CustomText> after the end of your
                           period.
                         </CustomText>
@@ -306,22 +318,11 @@ const ProfileScreen = ({ navigation }: any) => {
                                   color: colors.white,
                                 }}
                               >
-                                Fill in the post-cycle questionnaire
-                              </CustomText>
-                              <CustomText
-                                style={{
-                                  color: colors.white,
-                                  fontSize: 12,
-                                }}
-                              >
-                                3 days left
+                                Fill in the questionnaire
                               </CustomText>
                             </View>
 
                             <Svg
-                              style={{
-                                alignSelf: 'flex-end',
-                              }}
                               fill="none"
                               stroke={colors.white}
                               height="40"
@@ -371,123 +372,94 @@ const ProfileScreen = ({ navigation }: any) => {
                         </Svg>
                       </Pressable>
                     </>
-                  ) : (
-                    <LinearGradient
-                      colors={['#fa7091', '#faa8ba']}
-                      useAngle={true}
-                      angle={140}
+                  )}
+                </>
+              )}
+
+              {waitingSamanta || isCurrentCycle || (
+                <>
+                  <View style={{ width: '100%' }}>
+                    <CustomText
                       style={{
-                        ...styles.button,
-                        ...customStyles.cycleInfoContainer,
+                        textAlign: 'center',
                       }}
                     >
+                      Track your <CustomText style={styles.highlight}>cycles</CustomText> and the{' '}
+                      <CustomText style={styles.highlight}>intensity</CustomText> of your periods.
+                    </CustomText>
+
+                    <Pressable
+                      style={{
+                        ...styles.button,
+                        backgroundColor: colors.primary,
+                        width: '100%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 10,
+                      }}
+                      onPress={() => startCycle()}
+                    >
+                      <Svg fill="none" stroke="none" height="40" width="40" viewBox="0 0 24 24" />
                       <CustomText
                         style={{
                           color: colors.white,
-                          fontSize: 22,
-                          ...styles.bold,
                         }}
                       >
-                        Your next cycle is due in 3 days
+                        My cycle has started
                       </CustomText>
+                      <Svg
+                        style={{
+                          alignSelf: 'flex-end',
+                        }}
+                        fill="none"
+                        stroke={colors.white}
+                        height="40"
+                        width="40"
+                        viewBox="0 0 24 24"
+                        strokeLinecap="round"
+                        strokeWidth="1.5"
+                      >
+                        <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
+                      </Svg>
+                    </Pressable>
+                  </View>
+
+                  {noDataOnCycle || (
+                    <Pressable
+                      style={{
+                        ...styles.button,
+                        backgroundColor: colors.white,
+                        borderColor: colors.primary,
+                        borderWidth: 3,
+                        width: '100%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}
+                      onPress={() => navigation.navigate('Stats')}
+                    >
+                      <Svg fill="none" stroke="none" height="40" width="40" viewBox="0 0 24 24" />
                       <CustomText
                         style={{
-                          color: colors.white,
-                          fontSize: 14,
-                          fontFamily: 'FiraSans-Light',
-                          marginTop: 10,
+                          color: colors.primary,
                         }}
                       >
-                        You may experience premenstrual symptoms such as cramps, fatigue, mood swings, breast
-                        tenderness, and water retention.
+                        View cycle stats
                       </CustomText>
-                    </LinearGradient>
-                  )}
-
-                  {cycleEnded || (
-                    <>
-                      <View style={{ width: '100%' }}>
-                        <CustomText
-                          style={{
-                            textAlign: 'center',
-                          }}
-                        >
-                          Track your <CustomText style={styles.highlight}>cycles</CustomText> and the{' '}
-                          <CustomText style={styles.highlight}>intensity</CustomText> of your periods.
-                        </CustomText>
-
-                        <Pressable
-                          style={{
-                            ...styles.button,
-                            backgroundColor: colors.primary,
-                            width: '100%',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            marginTop: 10,
-                          }}
-                          onPress={() => startCycle()}
-                        >
-                          <Svg fill="none" stroke="none" height="40" width="40" viewBox="0 0 24 24" />
-                          <CustomText
-                            style={{
-                              color: colors.white,
-                            }}
-                          >
-                            My cycle has started
-                          </CustomText>
-                          <Svg
-                            style={{
-                              alignSelf: 'flex-end',
-                            }}
-                            fill="none"
-                            stroke={colors.white}
-                            height="40"
-                            width="40"
-                            viewBox="0 0 24 24"
-                            strokeLinecap="round"
-                            strokeWidth="1.5"
-                          >
-                            <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
-                          </Svg>
-                        </Pressable>
-                      </View>
-
-                      <Pressable
+                      <Svg
                         style={{
-                          ...styles.button,
-                          backgroundColor: colors.white,
-                          borderColor: colors.primary,
-                          borderWidth: 3,
-                          width: '100%',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
+                          alignSelf: 'flex-end',
                         }}
-                        onPress={() => navigation.navigate('Stats')}
+                        fill="none"
+                        stroke={colors.primary}
+                        height="40"
+                        width="40"
+                        viewBox="0 0 24 24"
+                        strokeLinecap="round"
+                        strokeWidth="1.5"
                       >
-                        <Svg fill="none" stroke="none" height="40" width="40" viewBox="0 0 24 24" />
-                        <CustomText
-                          style={{
-                            color: colors.primary,
-                          }}
-                        >
-                          View cycle stats
-                        </CustomText>
-                        <Svg
-                          style={{
-                            alignSelf: 'flex-end',
-                          }}
-                          fill="none"
-                          stroke={colors.primary}
-                          height="40"
-                          width="40"
-                          viewBox="0 0 24 24"
-                          strokeLinecap="round"
-                          strokeWidth="1.5"
-                        >
-                          <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
-                        </Svg>
-                      </Pressable>
-                    </>
+                        <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
+                      </Svg>
+                    </Pressable>
                   )}
                 </>
               )}

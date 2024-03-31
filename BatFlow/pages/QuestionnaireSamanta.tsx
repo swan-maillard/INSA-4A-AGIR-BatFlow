@@ -38,9 +38,6 @@ const QuestionnaireSamanta = ({ route, navigation }: any) => {
 
       data.setScoreSamanta(score);
 
-      console.log('Score', data.getUserData('scoresSamanta', 0));
-      console.log('Average', data.getUserData('averageSamanta', 0));
-
       navigation.navigate('Overview');
     },
     [data, navigation]

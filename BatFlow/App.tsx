@@ -11,7 +11,6 @@ import InformationScreen from './pages/InformationScreen';
 import QuestionnairePBAC from './pages/QuestionnairePBAC';
 import QuestionnaireSamanta from './pages/QuestionnaireSamanta';
 import SettingsScreen from './pages/SettingsScreen';
-import ResultsPBAC from './pages/ResultsPBAC.tsx';
 import CycleOverview from './pages/CycleOverview.tsx';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -66,7 +65,6 @@ const App = () => {
                 }}
               />
             ))}
-          <Stack.Screen name={'ResultsPBAC'} component={ResultsPBAC} />
           {/*} FIN QUESTIONNAIRE PBAC {*/}
 
           {/*} DEBUT QUESTIONNAIRE SAMANTA {*/}

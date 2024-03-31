@@ -43,7 +43,7 @@ export default class DataManager {
 
     userData[key] = newValue;
 
-    console.log(this._data);
+    console.log(this._data.swan);
     this._setData(this._data);
   }
 
@@ -59,33 +59,80 @@ export default class DataManager {
   startCycle(date: Date) {
     const cycles = this.getCycles();
     if (cycles.length === 0 || cycles[cycles.length - 1].length === 2) {
+      // Create a new cycle array and add the start date
       cycles.push([date.toLocaleDateString('en-CA')]);
       this.setUserData('cycles', cycles);
+
+      // Create a new PBAC answers array
+      const answersPBAC = this.getAnswersPBAC();
+      answersPBAC.push([]);
+      this.setUserData('answersPBAC', answersPBAC);
+
+      // Initialize a new PBAC score
+      const scoresPBAC = this.getUserData<number[]>('scoresPBAC', []);
+      scoresPBAC.push(0);
+      this.setUserData('scoresPBAC', scoresPBAC);
+
+      // Compute the new gap duration average
+      let averageGapDuration = this.getUserData<number | null>('averageGapDuration', null);
+      if (averageGapDuration === null) {
+        this.setUserData('averageGapDuration', 28);
+      } else {
+        const end = new Date(cycles[cycles.length - 2][1]);
+        const start = new Date(cycles[cycles.length - 2][0]);
+        const gapDuration = Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+        console.log('Gap duration', gapDuration);
+        averageGapDuration = (averageGapDuration * (cycles.length - 1) + gapDuration) / cycles.length;
+        averageGapDuration = Math.round(averageGapDuration * 10) / 10;
+        console.log('Average', averageGapDuration);
+        this.setUserData('averageGapDuration', averageGapDuration);
+      }
     }
   }
 
   endCycle(date: Date) {
     const cycles = this.getCycles();
     if (cycles.length > 0 && cycles[cycles.length - 1].length === 1) {
-      const start = new Date(cycles[cycles.length - 1][0]);
-      const duration = Math.round((date.getTime() - start.getTime()) / (1000 * 3600 * 24));
-      cycles[cycles.length - 1].push(date.toLocaleDateString('en-CA'));
+      // Add the end date of the last cycle
+      const endDate = date.toLocaleDateString('en-CA');
+      cycles[cycles.length - 1].push(endDate);
       this.setUserData('cycles', cycles);
-      let average = this.getUserData<number | null>('averageDuration', null);
-      average = average === null ? duration : (average * (cycles.length - 1) + duration) / cycles.length;
 
-      this.setUserData('averageDuration', average);
+      // Compute the new duration average of a cycle
+      let averageDuration = this.getUserData<number | null>('averageDuration', null);
+      const start = new Date(cycles[cycles.length - 1][0]);
+      const end = new Date(endDate);
+      const duration = Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24) + 1);
+      averageDuration =
+        averageDuration === null ? duration : (averageDuration * (cycles.length - 1) + duration) / cycles.length;
+
+      averageDuration = Math.round(averageDuration * 10) / 10;
+      this.setUserData('averageDuration', averageDuration);
+
+      // Compute the new PBAC score average
+      const scoresPBAC = this.getUserData('scoresPBAC', [0]);
+      const score = scoresPBAC[scoresPBAC.length - 1];
+      let averagePBAC = this.getUserData<number | null>('averagePBAC', null);
+      averagePBAC = averagePBAC === null ? score : (averagePBAC * (cycles.length - 1) + score) / cycles.length;
+
+      averagePBAC = Math.round(averagePBAC * 10) / 10;
+      this.setUserData('averagePBAC', averagePBAC);
     }
   }
 
-  getAnswersPBAC(): AnswersPBAC[] {
+  getAnswersPBAC(): AnswersPBAC[][] {
     return this.getUserData('answersPBAC', []);
   }
 
   addAnswersPBAC(answers: AnswersPBAC) {
     const answersPBAC = this.getAnswersPBAC();
-    answersPBAC.push(answers);
+    answersPBAC[answersPBAC.length - 1].push(answers);
     this.setUserData('answersPBAC', answersPBAC);
+  }
+
+  addScorePBAC(score: number) {
+    const scoresPBAC = this.getUserData('scoresPBAC', [0]);
+    scoresPBAC[scoresPBAC.length - 1] += score;
   }
 
   getAnswersSamanta(): boolean[][] {
@@ -99,11 +146,16 @@ export default class DataManager {
   }
 
   setScoreSamanta(score: number) {
+    // Add the new Samanta score
     const scores = this.getUserData<number[]>('scoresSamanta', []);
     scores.push(score);
-    let average = this.getUserData<number | null>('averageSamanta', null);
-    average = average === null ? score : (average * scores.length + score) / (scores.length + 1);
     this.setUserData('scoresSamanta', scores);
+
+    // Compute the new average score
+    let average = this.getUserData<number | null>('averageSamanta', null);
+    average = average === null ? score : (average * (scores.length - 1) + score) / scores.length;
+
+    average = Math.round(average * 10) / 10;
     this.setUserData('averageSamanta', average);
   }
 

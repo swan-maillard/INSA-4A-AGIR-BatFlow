@@ -13,7 +13,7 @@ const QuestionnairePBAC = ({ route, navigation }: any) => {
 
   const data = useContext(DataContext);
 
-  const [_, setAnswersPBAC] = useState<AnswersPBAC[]>([]);
+  const [_, setAnswersPBAC] = useState<AnswersPBAC[][]>([]);
 
   const [answer, setAnswer] = useState<string | null>(null);
 
@@ -38,8 +38,36 @@ const QuestionnairePBAC = ({ route, navigation }: any) => {
   const saveAnswers = useCallback(
     (allAnswers: AnswersPBAC) => {
       data.addAnswersPBAC(allAnswers);
-      console.log('Submitted Answers:', data.getAnswersPBAC()[data.getAnswersPBAC().length - 1]);
-      navigation.navigate('ResultsPBAC');
+
+      let score = 0;
+      switch (allAnswers[1]) {
+        case 'low':
+          score += 1;
+          break;
+        case 'medium':
+          score += 5;
+          break;
+        case 'high':
+          score += allAnswers[0] === 'pad' ? 20 : 10;
+          break;
+      }
+
+      switch (allAnswers[2]) {
+        case 'clot-small':
+          score += 1;
+          break;
+        case 'clot-big':
+          score += 5;
+          break;
+      }
+
+      if (allAnswers[3] === 'flooding') {
+        score += 5;
+      }
+
+      data.addScorePBAC(score);
+
+      navigation.navigate('Profile');
     },
     [data, navigation]
   );

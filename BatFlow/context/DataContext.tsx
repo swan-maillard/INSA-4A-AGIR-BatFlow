@@ -14,7 +14,8 @@ export type CurrentUser = {
 export type UserData = {
   cycles?: string[][];
   averageDuration?: number;
-  answersPBAC?: AnswersPBAC[];
+  averageGapDuration?: number;
+  answersPBAC?: AnswersPBAC[][];
   scoresPBAC?: number[];
   averagePBAC?: number;
   answersSamanta?: boolean[][];

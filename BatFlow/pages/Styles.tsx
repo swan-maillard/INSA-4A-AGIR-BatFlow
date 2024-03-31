@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 
-const primary = '#fc003b';
+const primary = '#fc0e46';
 const secondary = '#a90028';
 const black = '#232121';
 
 const pink = '#F5577C';
 const lightpink = '#FFC0CF';
+const green = '#8F9E5E';
 const textgrey = '#66676F';
 const white = '#fff';
 const grey = '#e8e8e8';
@@ -17,6 +18,7 @@ const colors = {
   black,
   white,
   grey,
+  green,
 };
 
 // @ts-ignore
