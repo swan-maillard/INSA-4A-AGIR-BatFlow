@@ -1,15 +1,15 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import {Calendar} from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import Header from '../components/Header';
 import NavigationBar from '../components/NavigationBar.tsx';
 import LinearGradient from 'react-native-linear-gradient';
-import {DataContext} from '../context/DataContext.tsx';
+import { DataContext } from '../context/DataContext.tsx';
 
-const StatsScreen = ({navigation}: any) => {
+const StatsScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
 
   const [currentUser, setCurrentUser] = useState('');
@@ -43,23 +43,16 @@ const StatsScreen = ({navigation}: any) => {
     // On rajoute les faux cycles à la liste de cycles
     periods = [...fakePeriods, ...periods];
 
-    const markedDates: {[key: string]: any} = {};
+    const markedDates: { [key: string]: any } = {};
 
     // Pour chaque cycle défini par sa date de début et de fin
     periods.forEach(([start, end]) => {
       // On parcourt tous les jours sur cette période
-      for (
-        let date = new Date(start);
-        date <= end;
-        date.setDate(date.getDate() + 1)
-      ) {
+      for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
         const formattedDate = date.toISOString().split('T')[0];
 
         // Il y a différents cas d'affichage
-        if (
-          date.getTime() === start.getTime() &&
-          date.getTime() === end.getTime()
-        ) {
+        if (date.getTime() === start.getTime() && date.getTime() === end.getTime()) {
           markedDates[formattedDate] = {
             selected: true,
             startingDay: true,
@@ -125,22 +118,22 @@ const StatsScreen = ({navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <View style={customStyles.actions}>
               <View>
-                <CustomText style={{textAlign: 'center'}}>
+                <CustomText style={{ textAlign: 'center' }}>
                   Ever wondered about the connection between your{' '}
-                  <CustomText style={styles.highlight}>period</CustomText> and
-                  your <CustomText style={styles.highlight}>health</CustomText>?
+                  <CustomText style={styles.highlight}>period</CustomText> and your{' '}
+                  <CustomText style={styles.highlight}>health</CustomText>?
                 </CustomText>
                 <CustomText
-                  style={{textAlign: 'center', fontFamily: 'FiraSans-Light'}}>
-                  Let's explore the answers together,{' '}
-                  <CustomText style={styles.highlight}>
-                    {currentUser}
-                  </CustomText>
-                  !
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: 'FiraSans-Light',
+                  }}
+                >
+                  Let's explore the answers together, <CustomText style={styles.highlight}>{currentUser}</CustomText>!
                 </CustomText>
               </View>
               <LinearGradient
@@ -152,25 +145,17 @@ const StatsScreen = ({navigation}: any) => {
                   flexDirection: 'row',
                   gap: 20,
                   alignItems: 'center',
-                }}>
-                <Image
-                  source={require('./../assets/blood.png')}
-                  style={{width: 30, height: 44}}
-                />
+                }}
+              >
+                <Image source={require('./../assets/blood.png')} style={{ width: 30, height: 44 }} />
                 {duration ? (
                   <View>
-                    <CustomText style={styles.textDurationStat}>
-                      Your period usually lasts...
-                    </CustomText>
-                    <CustomText style={styles.durationStat}>
-                      {duration} days
-                    </CustomText>
+                    <CustomText style={styles.textDurationStat}>Your period usually lasts...</CustomText>
+                    <CustomText style={styles.durationStat}>{duration} days</CustomText>
                   </View>
                 ) : (
                   <View>
-                    <CustomText style={styles.textDurationStat}>
-                      You didn't track your periods yet!
-                    </CustomText>
+                    <CustomText style={styles.textDurationStat}>You didn't track your periods yet!</CustomText>
                   </View>
                 )}
               </LinearGradient>
@@ -178,28 +163,26 @@ const StatsScreen = ({navigation}: any) => {
                 <View style={styles.statsContainer}>
                   <>
                     <View style={styles.scoreContainer}>
-                      <CustomText style={styles.descriptionStat}>
-                        Your average PBAC score is
-                      </CustomText>
+                      <CustomText style={styles.descriptionStat}>Your average PBAC score is</CustomText>
                       <CustomText
                         style={{
                           ...styles.bold,
                           fontSize: 25,
                           textAlign: 'center',
-                        }}>
+                        }}
+                      >
                         {scorePBAC}
                       </CustomText>
                     </View>
                     <View style={styles.scoreContainer}>
-                      <CustomText style={styles.descriptionStat}>
-                        Your average SAMANTA score is
-                      </CustomText>
+                      <CustomText style={styles.descriptionStat}>Your average SAMANTA score is</CustomText>
                       <CustomText
                         style={{
                           ...styles.bold,
                           fontSize: 25,
                           textAlign: 'center',
-                        }}>
+                        }}
+                      >
                         {scoreSamanta}
                       </CustomText>
                     </View>
@@ -212,7 +195,8 @@ const StatsScreen = ({navigation}: any) => {
                   textAlign: 'center',
                   fontFamily: 'FiraSans-Medium',
                   paddingTop: 10,
-                }}>
+                }}
+              >
                 Check the calendar of your menstrual cycles
               </CustomText>
               <Calendar

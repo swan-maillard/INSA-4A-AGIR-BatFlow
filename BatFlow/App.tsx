@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useMemo, useState} from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import questionsSamanta from './content/QuestionsSamanta.ts';
 
 import HomeScreen from './pages/HomeScreen';
@@ -14,11 +14,11 @@ import SettingsScreen from './pages/SettingsScreen';
 import ResultsPBAC from './pages/ResultsPBAC.tsx';
 import CycleOverview from './pages/CycleOverview.tsx';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddSanitoryProductScreen from './pages/AddSanitoryProductScreen.tsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Data, DataContext} from './context/DataContext.tsx';
+import { Data, DataContext } from './context/DataContext.tsx';
 import DataManager from './data/DataManager.ts';
 
 const Stack = createNativeStackNavigator();
@@ -29,7 +29,7 @@ const App = () => {
 
   useEffect(() => {
     if (!data) {
-      AsyncStorage.getItem('AGIR-data').then(value => {
+      AsyncStorage.getItem('AGIR-data').then((value) => {
         if (!JSON.parse(value as string)) {
           setData(value ? JSON.parse(value) : {});
         }
@@ -42,7 +42,7 @@ const App = () => {
   return (
     <DataContext.Provider value={dataManager}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -50,10 +50,7 @@ const App = () => {
           <Stack.Screen name="Stats" component={StatsScreen} />
           <Stack.Screen name="Overview" component={CycleOverview} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
-          <Stack.Screen
-            name="AddSanitoryProduct"
-            component={AddSanitoryProductScreen}
-          />
+          <Stack.Screen name="AddSanitoryProduct" component={AddSanitoryProductScreen} />
           <Stack.Screen name="Information" component={InformationScreen} />
           {/*} DEBUT QUESTIONNAIRE PBAC {*/}
           {Array(4)

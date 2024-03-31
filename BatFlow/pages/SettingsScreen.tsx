@@ -1,15 +1,15 @@
-import React, {useCallback, useContext, useEffect, useState,} from 'react';
-import {Image, Pressable, ScrollView, StyleSheet, Switch, View,} from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Image, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import Header from '../components/Header';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import styles, {colors} from './Styles';
+import styles, { colors } from './Styles';
 import LinearGradient from 'react-native-linear-gradient';
 import NavigationBar from '../components/NavigationBar.tsx';
-import Svg, {Path} from 'react-native-svg';
-import {DataContext} from '../context/DataContext.tsx';
+import Svg, { Path } from 'react-native-svg';
+import { DataContext } from '../context/DataContext.tsx';
 
-const SettingsScreen = ({navigation}: any) => {
+const SettingsScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
   const [currentUser, setCurrentUser] = useState('');
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -73,7 +73,7 @@ const SettingsScreen = ({navigation}: any) => {
       justifyContent: 'space-between',
     },
     switch: {
-      transform: [{scaleX: 1.3}, {scaleY: 1.3}],
+      transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }],
     },
   });
 
@@ -82,38 +82,46 @@ const SettingsScreen = ({navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <CustomText
               style={{
                 color: colors.primary,
                 fontFamily: 'FiraSans-Bold',
                 fontSize: 25,
-              }}>
+              }}
+            >
               Settings
             </CustomText>
             <View style={customStyles.actions}>
-              <Pressable
-                style={{width: '100%'}}
-                onPress={() => navigation.navigate('Profile')}>
+              <Pressable style={{ width: '100%' }} onPress={() => navigation.navigate('Profile')}>
                 <LinearGradient
                   colors={['#fc0e46', '#fd6085']}
                   useAngle={true}
                   angle={140}
-                  style={{...styles.button, ...customStyles.usernameButton}}>
+                  style={{
+                    ...styles.button,
+                    ...customStyles.usernameButton,
+                  }}
+                >
                   <View
-                    style={{display: 'flex', flexDirection: 'row', gap: 20}}>
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: 20,
+                    }}
+                  >
                     <Image
                       source={require('./../assets/logo-2.png')}
-                      style={{...styles.logo, width: 40, height: 40}}
+                      style={{
+                        ...styles.logo,
+                        width: 40,
+                        height: 40,
+                      }}
                     />
-                    <View style={{display: 'flex'}}>
-                      <CustomText style={customStyles.settingsText}>
-                        Username
-                      </CustomText>
-                      <CustomText style={{color: colors.white}}>
-                        {currentUser}
-                      </CustomText>
+                    <View style={{ display: 'flex' }}>
+                      <CustomText style={customStyles.settingsText}>Username</CustomText>
+                      <CustomText style={{ color: colors.white }}>{currentUser}</CustomText>
                     </View>
                   </View>
                   <Svg
@@ -123,20 +131,34 @@ const SettingsScreen = ({navigation}: any) => {
                     width="40"
                     viewBox="0 0 24 24"
                     strokeLinecap="round"
-                    strokeWidth="1.5">
+                    strokeWidth="1.5"
+                  >
                     <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
                   </Svg>
                 </LinearGradient>
               </Pressable>
 
-              <View style={{backgroundColor: '#f0f0f0', borderRadius: 30}}>
+              <View
+                style={{
+                  backgroundColor: '#f0f0f0',
+                  borderRadius: 30,
+                }}
+              >
                 <View style={customStyles.settingsItem}>
                   <CustomText
-                    style={{color: '#333332', fontSize: 15, ...styles.bold}}>
+                    style={{
+                      color: '#333332',
+                      fontSize: 15,
+                      ...styles.bold,
+                    }}
+                  >
                     Allow notifications
                   </CustomText>
                   <Switch
-                    trackColor={{false: 'grey', true: colors.primary}}
+                    trackColor={{
+                      false: 'grey',
+                      true: colors.primary,
+                    }}
                     thumbColor={'white'}
                     onValueChange={toggleNotifications}
                     value={notificationsEnabled}
@@ -150,12 +172,15 @@ const SettingsScreen = ({navigation}: any) => {
                       fontSize: 15,
                       ...styles.bold,
                       width: '75%',
-                    }}>
-                    Allow us to keep the pictures of your sanitory products for
-                    further research
+                    }}
+                  >
+                    Allow us to keep the pictures of your sanitory products for further research
                   </CustomText>
                   <Switch
-                    trackColor={{false: 'grey', true: colors.primary}}
+                    trackColor={{
+                      false: 'grey',
+                      true: colors.primary,
+                    }}
                     thumbColor={'white'}
                     onValueChange={toggleSharing}
                     value={sharingEnabled}
@@ -170,8 +195,9 @@ const SettingsScreen = ({navigation}: any) => {
                   backgroundColor: colors.primary,
                   width: '100%',
                 }}
-                onPress={() => navigation.navigate('Home')}>
-                <CustomText style={{color: colors.white}}>Log out</CustomText>
+                onPress={() => navigation.navigate('Home')}
+              >
+                <CustomText style={{ color: colors.white }}>Log out</CustomText>
               </Pressable>
             </View>
           </View>

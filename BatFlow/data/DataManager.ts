@@ -1,9 +1,4 @@
-import {
-  AllUsersData,
-  AnswersPBAC,
-  Data,
-  UserDataKeys,
-} from '../context/DataContext.tsx';
+import { AllUsersData, AnswersPBAC, Data, UserDataKeys } from '../context/DataContext.tsx';
 
 export default class DataManager {
   private readonly _data: Data;
@@ -73,16 +68,11 @@ export default class DataManager {
     const cycles = this.getCycles();
     if (cycles.length > 0 && cycles[cycles.length - 1].length === 1) {
       const start = new Date(cycles[cycles.length - 1][0]);
-      const duration = Math.round(
-        (date.getTime() - start.getTime()) / (1000 * 3600 * 24),
-      );
+      const duration = Math.round((date.getTime() - start.getTime()) / (1000 * 3600 * 24));
       cycles[cycles.length - 1].push(date.toLocaleDateString('en-CA'));
       this.setUserData('cycles', cycles);
       let average = this.getUserData<number | null>('averageDuration', null);
-      average =
-        average === null
-          ? duration
-          : (average * (cycles.length - 1) + duration) / cycles.length;
+      average = average === null ? duration : (average * (cycles.length - 1) + duration) / cycles.length;
 
       this.setUserData('averageDuration', average);
     }
@@ -112,10 +102,7 @@ export default class DataManager {
     const scores = this.getUserData<number[]>('scoresSamanta', []);
     scores.push(score);
     let average = this.getUserData<number | null>('averageSamanta', null);
-    average =
-      average === null
-        ? score
-        : (average * scores.length + score) / (scores.length + 1);
+    average = average === null ? score : (average * scores.length + score) / (scores.length + 1);
     this.setUserData('scoresSamanta', scores);
     this.setUserData('averageSamanta', average);
   }

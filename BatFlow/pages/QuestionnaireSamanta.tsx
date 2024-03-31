@@ -1,16 +1,16 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import Svg, {Path} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import Header from '../components/Header';
 import questionsSamanta from '../content/QuestionsSamanta.ts';
 import NavigationBar from '../components/NavigationBar.tsx';
-import {DataContext} from '../context/DataContext.tsx';
+import { DataContext } from '../context/DataContext.tsx';
 
-const QuestionnaireSamanta = ({route, navigation}: any) => {
-  const {questionIndex, answers} = route.params;
+const QuestionnaireSamanta = ({ route, navigation }: any) => {
+  const { questionIndex, answers } = route.params;
   const question = questionsSamanta[questionIndex];
 
   const data = useContext(DataContext);
@@ -32,11 +32,8 @@ const QuestionnaireSamanta = ({route, navigation}: any) => {
   const saveAnswers = useCallback(
     (allAnswers: boolean[]) => {
       data.addAnswersSamanta(allAnswers);
-      console.log(
-        'Submitted Answers:',
-        data.getAnswersSamanta()[data.getAnswersSamanta().length - 1],
-      );
-      const s = allAnswers.map(val => (val ? 1 : 0));
+      console.log('Submitted Answers:', data.getAnswersSamanta()[data.getAnswersSamanta().length - 1]);
+      const s = allAnswers.map((val) => (val ? 1 : 0));
       const score = s[0] * 3 + s[1] + s[2] * 3 + s[3] + s[4] + s[5];
 
       data.setScoreSamanta(score);
@@ -46,7 +43,7 @@ const QuestionnaireSamanta = ({route, navigation}: any) => {
 
       navigation.navigate('Overview');
     },
-    [data, navigation],
+    [data, navigation]
   );
 
   useEffect(() => {
@@ -147,50 +144,45 @@ const QuestionnaireSamanta = ({route, navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          style={{width: '100%'}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <CustomText
               style={{
                 color: colors.primary,
                 fontFamily: 'FiraSans-Bold',
                 fontSize: 22,
-              }}>
+              }}
+            >
               End of cycle - CHECKUP
             </CustomText>
             <View style={customStyles.actions}>
               <View style={customStyles.questionsContainer}>
-                <CustomText style={{textAlign: 'center', fontSize: 20}}>
-                  {question}
-                </CustomText>
+                <CustomText style={{ textAlign: 'center', fontSize: 20 }}>{question}</CustomText>
                 <View style={customStyles.answers}>
                   <Pressable
                     onPress={handleYes}
                     style={{
                       ...customStyles.answer,
                       backgroundColor: colors.primary,
-                    }}>
-                    <CustomText style={{color: 'white'}}>YES</CustomText>
+                    }}
+                  >
+                    <CustomText style={{ color: 'white' }}>YES</CustomText>
                   </Pressable>
                   <Pressable
                     onPress={handleNo}
                     style={{
                       ...customStyles.answer,
                       backgroundColor: colors.black,
-                    }}>
-                    <CustomText style={{color: 'white'}}>NO</CustomText>
+                    }}
+                  >
+                    <CustomText style={{ color: 'white' }}>NO</CustomText>
                   </Pressable>
                 </View>
               </View>
               <View style={customStyles.progressBar}>
                 <View style={customStyles.line} />
                 {[...Array(6)].map((x, i) => (
-                  <Svg
-                    key={'step' + i}
-                    fill={colors.primary}
-                    style={customStyles.step}
-                    viewBox="0 0 512 512">
+                  <Svg key={'step' + i} fill={colors.primary} style={customStyles.step} viewBox="0 0 512 512">
                     <Path d={progressSvgPath(i)} />
                   </Svg>
                 ))}

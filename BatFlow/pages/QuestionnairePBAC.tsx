@@ -1,15 +1,15 @@
-import React, {useCallback, useContext, useEffect, useState,} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import Svg, {Path} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import Header from '../components/Header';
 import NavigationBar from '../components/NavigationBar.tsx';
-import {AnswersPBAC, DataContext} from '../context/DataContext.tsx';
+import { AnswersPBAC, DataContext } from '../context/DataContext.tsx';
 
-const QuestionnairePBAC = ({route, navigation}: any) => {
-  const {questionIndex, answers} = route.params;
+const QuestionnairePBAC = ({ route, navigation }: any) => {
+  const { questionIndex, answers } = route.params;
 
   const data = useContext(DataContext);
 
@@ -38,13 +38,10 @@ const QuestionnairePBAC = ({route, navigation}: any) => {
   const saveAnswers = useCallback(
     (allAnswers: AnswersPBAC) => {
       data.addAnswersPBAC(allAnswers);
-      console.log(
-        'Submitted Answers:',
-        data.getAnswersPBAC()[data.getAnswersPBAC().length - 1],
-      );
+      console.log('Submitted Answers:', data.getAnswersPBAC()[data.getAnswersPBAC().length - 1]);
       navigation.navigate('ResultsPBAC');
     },
-    [data, navigation],
+    [data, navigation]
   );
 
   useEffect(() => {
@@ -81,13 +78,21 @@ const QuestionnairePBAC = ({route, navigation}: any) => {
           <>
             <Pressable
               onPress={handlePad}
-              style={{...customStyles.answer, backgroundColor: colors.primary}}>
-              <CustomText style={{color: 'white'}}>PAD</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.primary,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>PAD</CustomText>
             </Pressable>
             <Pressable
               onPress={handleTampon}
-              style={{...customStyles.answer, backgroundColor: colors.black}}>
-              <CustomText style={{color: 'white'}}>TAMPON</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.black,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>TAMPON</CustomText>
             </Pressable>
           </>
         );
@@ -96,18 +101,30 @@ const QuestionnairePBAC = ({route, navigation}: any) => {
           <>
             <Pressable
               onPress={handleLow}
-              style={{...customStyles.answer, backgroundColor: colors.primary}}>
-              <CustomText style={{color: 'white'}}>LOW</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.primary,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>LOW</CustomText>
             </Pressable>
             <Pressable
               onPress={handleMedium}
-              style={{...customStyles.answer, backgroundColor: colors.black}}>
-              <CustomText style={{color: 'white'}}>MEDIUM</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.black,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>MEDIUM</CustomText>
             </Pressable>
             <Pressable
               onPress={handleHigh}
-              style={{...customStyles.answer, backgroundColor: colors.black}}>
-              <CustomText style={{color: 'white'}}>HIGH</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.black,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>HIGH</CustomText>
             </Pressable>
           </>
         );
@@ -116,18 +133,30 @@ const QuestionnairePBAC = ({route, navigation}: any) => {
           <>
             <Pressable
               onPress={handleNoneClot}
-              style={{...customStyles.answer, backgroundColor: colors.primary}}>
-              <CustomText style={{color: 'white'}}>NONE</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.primary,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>NONE</CustomText>
             </Pressable>
             <Pressable
               onPress={handleSmallClot}
-              style={{...customStyles.answer, backgroundColor: colors.black}}>
-              <CustomText style={{color: 'white'}}>SMALL</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.black,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>SMALL</CustomText>
             </Pressable>
             <Pressable
               onPress={handleBigClot}
-              style={{...customStyles.answer, backgroundColor: colors.black}}>
-              <CustomText style={{color: 'white'}}>BIG</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.black,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>BIG</CustomText>
             </Pressable>
           </>
         );
@@ -136,13 +165,21 @@ const QuestionnairePBAC = ({route, navigation}: any) => {
           <>
             <Pressable
               onPress={handleFlooding}
-              style={{...customStyles.answer, backgroundColor: colors.primary}}>
-              <CustomText style={{color: 'white'}}>YES</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.primary,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>YES</CustomText>
             </Pressable>
             <Pressable
               onPress={handleNoFlooding}
-              style={{...customStyles.answer, backgroundColor: colors.black}}>
-              <CustomText style={{color: 'white'}}>NO</CustomText>
+              style={{
+                ...customStyles.answer,
+                backgroundColor: colors.black,
+              }}
+            >
+              <CustomText style={{ color: 'white' }}>NO</CustomText>
             </Pressable>
           </>
         );
@@ -234,35 +271,26 @@ const QuestionnairePBAC = ({route, navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          style={{width: '100%'}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <CustomText
               style={{
                 color: colors.primary,
                 fontFamily: 'FiraSans-Bold',
                 fontSize: 22,
-              }}>
+              }}
+            >
               Usage of sanitory product
             </CustomText>
             <View style={customStyles.actions}>
               <View style={customStyles.questionsContainer}>
-                <CustomText style={{textAlign: 'center', fontSize: 20}}>
-                  {question(questionIndex)}
-                </CustomText>
-                <View style={customStyles.answers}>
-                  {possibleAnswers(questionIndex)}
-                </View>
+                <CustomText style={{ textAlign: 'center', fontSize: 20 }}>{question(questionIndex)}</CustomText>
+                <View style={customStyles.answers}>{possibleAnswers(questionIndex)}</View>
               </View>
               <View style={customStyles.progressBar}>
                 <View style={customStyles.line} />
                 {[...Array(5)].map((x, i) => (
-                  <Svg
-                    key={'step' + i}
-                    fill={colors.primary}
-                    style={customStyles.step}
-                    viewBox="0 0 512 512">
+                  <Svg key={'step' + i} fill={colors.primary} style={customStyles.step} viewBox="0 0 512 512">
                     <Path d={progressSvgPath(i - 1)} />
                   </Svg>
                 ))}

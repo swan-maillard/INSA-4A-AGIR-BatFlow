@@ -1,10 +1,10 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import Svg, {Path} from 'react-native-svg';
-import {Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import styles, {colors} from '../pages/Styles';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import Svg, { Path } from 'react-native-svg';
+import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import styles, { colors } from '../pages/Styles';
 import CustomText from './CustomText.tsx';
-import {DataContext} from '../context/DataContext.tsx';
+import { DataContext } from '../context/DataContext.tsx';
 
 const customStyles = StyleSheet.create({
   header: {
@@ -45,18 +45,12 @@ const Header = () => {
   return (
     <View style={customStyles.header}>
       <View style={customStyles.headerLeft}>
-        <TouchableWithoutFeedback
-          onPress={() => navigation.navigate('Profile')}>
-          <Image
-            source={require('./../assets/logo-2.png')}
-            style={{...styles.logo, width: 40, height: 40}}
-          />
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('Profile')}>
+          <Image source={require('./../assets/logo-2.png')} style={{ ...styles.logo, width: 40, height: 40 }} />
         </TouchableWithoutFeedback>
-        <View style={{display: 'flex'}}>
+        <View style={{ display: 'flex' }}>
           <CustomText>Welcome,</CustomText>
-          <CustomText style={{...styles.bold, lineHeight: 17}}>
-            {currentUser}
-          </CustomText>
+          <CustomText style={{ ...styles.bold, lineHeight: 17 }}>{currentUser}</CustomText>
         </View>
       </View>
       <TouchableWithoutFeedback onPress={() => navigation.navigate('Home')}>

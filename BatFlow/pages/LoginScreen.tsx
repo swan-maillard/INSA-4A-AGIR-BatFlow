@@ -1,12 +1,12 @@
-import React, {useContext, useState} from 'react';
-import {Image, Pressable, StyleSheet, Text, TextInput, View,} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useContext, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import {CommonActions} from '@react-navigation/native';
-import {DataContext} from '../context/DataContext.tsx';
+import { CommonActions } from '@react-navigation/native';
+import { DataContext } from '../context/DataContext.tsx';
 
-const LoginScreen = ({navigation}: any) => {
+const LoginScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
   // Nom d'utilisateur
   const [username, setUsername] = useState('');
@@ -20,7 +20,7 @@ const LoginScreen = ({navigation}: any) => {
     data.setUser(username);
 
     // On redirige vers le Profile, en réinitialisant l'historique
-    navigation.dispatch(CommonActions.reset({routes: [{name: 'Profile'}]}));
+    navigation.dispatch(CommonActions.reset({ routes: [{ name: 'Profile' }] }));
   };
 
   const customStyles = StyleSheet.create({
@@ -77,20 +77,22 @@ const LoginScreen = ({navigation}: any) => {
         <View style={customStyles.container}>
           <TopWave />
           <View style={customStyles.actions}>
-            <CustomText style={{fontSize: 20, marginBottom: 20}}>
-              Login
-            </CustomText>
+            <CustomText style={{ fontSize: 20, marginBottom: 20 }}>Login</CustomText>
             <TextInput
               style={styles.input}
               placeholder="Username"
               placeholderTextColor="gray"
               value={username}
-              onChangeText={text => setUsername(text)}
+              onChangeText={(text) => setUsername(text)}
             />
             <Pressable
-              style={{...styles.button, ...customStyles.loginButton}}
-              onPress={handleLogin}>
-              <CustomText style={{color: 'white'}}>Login</CustomText>
+              style={{
+                ...styles.button,
+                ...customStyles.loginButton,
+              }}
+              onPress={handleLogin}
+            >
+              <CustomText style={{ color: 'white' }}>Login</CustomText>
             </Pressable>
           </View>
         </View>

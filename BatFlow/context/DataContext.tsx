@@ -1,4 +1,4 @@
-import {createContext} from 'react';
+import { createContext } from 'react';
 import DataManager from '../data/DataManager.ts';
 
 export type AnswersPBAC = [
@@ -31,6 +31,4 @@ export type AllUsersData = {
 export type Data = CurrentUser & AllUsersData;
 export type UserDataKeys = keyof UserData;
 
-export const DataContext = createContext<DataManager>(
-  new DataManager({}, () => null),
-);
+export const DataContext = createContext<DataManager>(new DataManager({}, () => null));

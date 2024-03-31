@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
 import Header from '../components/Header';
-import {CameraOptions, launchCamera} from 'react-native-image-picker';
-import Svg, {Path} from 'react-native-svg';
+import { CameraOptions, launchCamera } from 'react-native-image-picker';
+import Svg, { Path } from 'react-native-svg';
 import NavigationBar from '../components/NavigationBar.tsx';
 
-const AddSanitoryProductScreen = ({navigation}: any) => {
+const AddSanitoryProductScreen = ({ navigation }: any) => {
   const [prediction, setPrediction] = useState<string | null>(null);
   const [fileURI, setFileURI] = useState<string | null>(null);
   const [fileBase64, setFileBase64] = useState<string | null>(null);
@@ -25,13 +25,13 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
           image: fileBase64,
         }),
       })
-        .then(response => {
+        .then((response) => {
           return response.ok ? response.json() : null;
         })
-        .then((json: {prediction?: 'low' | 'medium' | 'high'}) => {
+        .then((json: { prediction?: 'low' | 'medium' | 'high' }) => {
           setPrediction(json.prediction || 'none');
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
     }
@@ -47,7 +47,7 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
       includeBase64: true,
     };
 
-    launchCamera(options, response => {
+    launchCamera(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else {
@@ -115,16 +115,15 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          style={{width: '100%'}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <CustomText
               style={{
                 color: colors.primary,
                 fontFamily: 'FiraSans-Bold',
                 fontSize: 22,
-              }}>
+              }}
+            >
               Usage of sanitory product
             </CustomText>
             <View style={customStyles.actions}>
@@ -137,10 +136,16 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
                   flexDirection: 'row',
                   gap: 10,
                 }}
-                onPress={handleTakePicture}>
-                <View style={{width: '75%'}}>
+                onPress={handleTakePicture}
+              >
+                <View style={{ width: '75%' }}>
                   <CustomText
-                    style={{...styles.bold, fontSize: 20, color: colors.white}}>
+                    style={{
+                      ...styles.bold,
+                      fontSize: 20,
+                      color: colors.white,
+                    }}
+                  >
                     Take a picture of the product
                   </CustomText>
                   <CustomText
@@ -148,7 +153,8 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
                       ...styles.light,
                       fontSize: 15,
                       color: colors.white,
-                    }}>
+                    }}
+                  >
                     To improve accuracy and help future scientific research !
                   </CustomText>
                 </View>
@@ -162,7 +168,7 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
               </Pressable>
 
               {fileURI ? (
-                <View style={{width: '100%'}}>
+                <View style={{ width: '100%' }}>
                   {prediction ? (
                     <View>
                       <View
@@ -170,21 +176,33 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
                           display: 'flex',
                           alignItems: 'center',
                           marginBottom: 10,
-                        }}>
+                        }}
+                      >
                         {prediction === 'none' ? (
                           <CustomText
-                            style={{...styles.bold, textAlign: 'center'}}>
+                            style={{
+                              ...styles.bold,
+                              textAlign: 'center',
+                            }}
+                          >
                             We couldn't perform analysis on this picture...
                           </CustomText>
                         ) : (
                           <CustomText
-                            style={{...styles.bold, textAlign: 'center'}}>
+                            style={{
+                              ...styles.bold,
+                              textAlign: 'center',
+                            }}
+                          >
                             Your blood loss seems to be {prediction}.
                           </CustomText>
                         )}
-                        <CustomText style={{textAlign: 'center'}}>
-                          Please answer the following questions to ensure the
-                          result.
+                        <CustomText
+                          style={{
+                            textAlign: 'center',
+                          }}
+                        >
+                          Please answer the following questions to ensure the result.
                         </CustomText>
                       </View>
                       <Pressable
@@ -197,37 +215,35 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                         }}
-                        onPress={() =>
-                          navigation.navigate('QuestionnairePBAC0')
-                        }>
-                        <Svg
-                          fill="none"
-                          stroke="none"
-                          height="40"
-                          width="40"
-                          viewBox="0 0 24 24"
-                        />
+                        onPress={() => navigation.navigate('QuestionnairePBAC0')}
+                      >
+                        <Svg fill="none" stroke="none" height="40" width="40" viewBox="0 0 24 24" />
                         <CustomText
-                          style={{color: colors.primary, ...styles.bold}}>
+                          style={{
+                            color: colors.primary,
+                            ...styles.bold,
+                          }}
+                        >
                           Answer the questions
                         </CustomText>
                         <Svg
-                          style={{alignSelf: 'flex-end'}}
+                          style={{
+                            alignSelf: 'flex-end',
+                          }}
                           fill="none"
                           stroke={colors.primary}
                           height="40"
                           width="40"
                           viewBox="0 0 24 24"
                           strokeLinecap="round"
-                          strokeWidth="1.5">
+                          strokeWidth="1.5"
+                        >
                           <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
                         </Svg>
                       </Pressable>
                     </View>
                   ) : (
-                    <CustomText style={styles.bold}>
-                      Wait a moment, your picture is being analyzed...
-                    </CustomText>
+                    <CustomText style={styles.bold}>Wait a moment, your picture is being analyzed...</CustomText>
                   )}
                 </View>
               ) : (
@@ -239,24 +255,20 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}
-                  onPress={() => navigation.navigate('QuestionnairePBAC0')}>
-                  <Svg
-                    fill="none"
-                    stroke="none"
-                    height="40"
-                    width="40"
-                    viewBox="0 0 24 24"
-                  />
+                  onPress={() => navigation.navigate('QuestionnairePBAC0')}
+                >
+                  <Svg fill="none" stroke="none" height="40" width="40" viewBox="0 0 24 24" />
                   <CustomText>I don't want to take a picture.</CustomText>
                   <Svg
-                    style={{alignSelf: 'flex-end'}}
+                    style={{ alignSelf: 'flex-end' }}
                     fill="none"
                     stroke={colors.black}
                     height="40"
                     width="40"
                     viewBox="0 0 24 24"
                     strokeLinecap="round"
-                    strokeWidth="1.5">
+                    strokeWidth="1.5"
+                  >
                     <Path d="m8.91003 19.9201 6.51997-6.52c.77-.77.77-2.03 0-2.8l-6.51997-6.52002" />
                   </Svg>
                 </Pressable>
@@ -265,11 +277,7 @@ const AddSanitoryProductScreen = ({navigation}: any) => {
               <View style={customStyles.progressBar}>
                 <View style={customStyles.line} />
                 {[...Array(5)].map((x, i) => (
-                  <Svg
-                    key={'step' + i}
-                    style={customStyles.step}
-                    fill={colors.primary}
-                    viewBox="0 0 512 512">
+                  <Svg key={'step' + i} style={customStyles.step} fill={colors.primary} viewBox="0 0 512 512">
                     <Path d={progressSvgPath(i)} />
                   </Svg>
                 ))}

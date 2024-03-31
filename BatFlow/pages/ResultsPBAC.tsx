@@ -1,14 +1,14 @@
-import React, {useCallback, useContext, useEffect, useState,} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import Header from '../components/Header.tsx';
 import NavigationBar from '../components/NavigationBar.tsx';
-import {AnswersPBAC, DataContext} from '../context/DataContext.tsx';
+import { AnswersPBAC, DataContext } from '../context/DataContext.tsx';
 
-const QuestionResultScreen = ({navigation}: any) => {
+const QuestionResultScreen = ({ navigation }: any) => {
   const [score, setScore] = useState(0);
   const data = useContext(DataContext);
   const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[]>([]);
@@ -75,7 +75,7 @@ const QuestionResultScreen = ({navigation}: any) => {
   }, [score]);
 
   const handleClick = async () => {
-    navigation.dispatch(CommonActions.reset({routes: [{name: 'Profile'}]}));
+    navigation.dispatch(CommonActions.reset({ routes: [{ name: 'Profile' }] }));
   };
 
   const customStyles = StyleSheet.create({
@@ -123,27 +123,25 @@ const QuestionResultScreen = ({navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <View style={customStyles.actions}>
-              <CustomText style={{fontSize: 20}}>
-                You got {score} point(s)
-              </CustomText>
+              <CustomText style={{ fontSize: 20 }}>You got {score} point(s)</CustomText>
               {score > 90 ? (
-                <CustomText style={{fontSize: 20}}>
+                <CustomText style={{ fontSize: 20 }}>
                   This might indicate that you have heavy menstrual bleeding.
                 </CustomText>
               ) : (
-                <CustomText style={{fontSize: 20}}>
-                  This is a very healthy result!
-                </CustomText>
+                <CustomText style={{ fontSize: 20 }}>This is a very healthy result!</CustomText>
               )}
               <Pressable
-                style={{...styles.button, ...customStyles.loginButton}}
-                onPress={handleClick}>
-                <CustomText style={{color: 'white'}}>
-                  Back to profile
-                </CustomText>
+                style={{
+                  ...styles.button,
+                  ...customStyles.loginButton,
+                }}
+                onPress={handleClick}
+              >
+                <CustomText style={{ color: 'white' }}>Back to profile</CustomText>
               </Pressable>
             </View>
           </View>

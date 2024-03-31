@@ -1,20 +1,18 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import NavigationBar from '../components/NavigationBar';
 import CustomText from '../components/CustomText';
-import {Calendar} from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import Header from '../components/Header';
-import {DataContext} from '../context/DataContext.tsx';
+import { DataContext } from '../context/DataContext.tsx';
 
 // Calendrier pour choisir les dates du cycle menstruel
-const CalendarScreen = ({navigation}: any) => {
+const CalendarScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
   // Date selectionnée (par défaut la date actuelle)
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toLocaleDateString('en-CA'),
-  );
+  const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
 
   const [cycles, setCycles] = useState<string[][]>([]);
   const [lastCycle, setLastCycle] = useState<string[]>([]);
@@ -53,23 +51,16 @@ const CalendarScreen = ({navigation}: any) => {
     // On rajoute les faux cycles à la liste de cycles
     periods = [...fakePeriods, ...periods];
 
-    const markedDates: {[key: string]: any} = {};
+    const markedDates: { [key: string]: any } = {};
 
     // Pour chaque cycle défini par sa date de début et de fin
     periods.forEach(([start, end]) => {
       // On parcourt tous les jours sur cette période
-      for (
-        let date = new Date(start);
-        date <= end;
-        date.setDate(date.getDate() + 1)
-      ) {
+      for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
         const formattedDate = date.toISOString().split('T')[0];
 
         // Il y a différents cas d'affichage
-        if (
-          date.getTime() === start.getTime() &&
-          date.getTime() === end.getTime()
-        ) {
+        if (date.getTime() === start.getTime() && date.getTime() === end.getTime()) {
           markedDates[formattedDate] = {
             selected: true,
             startingDay: true,
@@ -137,19 +128,17 @@ const CalendarScreen = ({navigation}: any) => {
         <Header />
         <TopWave />
 
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <View style={customStyles.actions}>
               <View>
-                <CustomText style={{textAlign: 'center'}}>
-                  When did your period{' '}
-                  <CustomText style={styles.highlight}>first appear</CustomText>{' '}
-                  this month?
+                <CustomText style={{ textAlign: 'center' }}>
+                  When did your period <CustomText style={styles.highlight}>first appear</CustomText> this month?
                 </CustomText>
               </View>
               <Calendar
                 value={selectedDate}
-                onDayPress={day => setSelectedDate(day.dateString as any)}
+                onDayPress={(day) => setSelectedDate(day.dateString as any)}
                 maxDate={new Date().toLocaleDateString('en-CA')}
                 markingType={'period'}
                 markedDates={{
@@ -181,8 +170,13 @@ const CalendarScreen = ({navigation}: any) => {
                   indicatorColor: colors.primary,
                 }}
               />
-              <View style={{marginTop: 20, width: '100%'}}>
-                <CustomText style={{...styles.highlight, textAlign: 'center'}}>
+              <View style={{ marginTop: 20, width: '100%' }}>
+                <CustomText
+                  style={{
+                    ...styles.highlight,
+                    textAlign: 'center',
+                  }}
+                >
                   {new Date(selectedDate).toDateString()}
                 </CustomText>
                 <Pressable
@@ -191,8 +185,9 @@ const CalendarScreen = ({navigation}: any) => {
                     backgroundColor: colors.primary,
                     width: '100%',
                   }}
-                  onPress={() => confirmDate()}>
-                  <CustomText style={{color: colors.white}}>Confirm</CustomText>
+                  onPress={() => confirmDate()}
+                >
+                  <CustomText style={{ color: colors.white }}>Confirm</CustomText>
                 </Pressable>
               </View>
             </View>

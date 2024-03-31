@@ -1,21 +1,15 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {Image, Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import styles, { colors } from './Styles';
 import TopWave from '../components/TopWave';
 import CustomText from '../components/CustomText';
 import Header from '../components/Header';
 import NavigationBar from '../components/NavigationBar.tsx';
-import Svg, {Path} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
-import {AnswersPBAC, DataContext} from '../context/DataContext.tsx';
+import { AnswersPBAC, DataContext } from '../context/DataContext.tsx';
 
-const StatsScreen = ({navigation}: any) => {
+const StatsScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
   const [lastCycle, setLastCycle] = useState<string[]>([]);
   const [answersPBAC, setAnswersPBAC] = useState<AnswersPBAC[]>([]);
@@ -25,16 +19,8 @@ const StatsScreen = ({navigation}: any) => {
   const retrieveData = useCallback(() => {
     setLastCycle(data.getLastCycle());
     setAnswersPBAC(data.getAnswersPBAC());
-    setScorePBAC(
-      data.getUserData('scoresPBAC', [0])[
-        data.getUserData('scoresPBAC', [0]).length - 1
-      ],
-    );
-    setScoreSamanta(
-      data.getUserData('scoresSamanta', [0])[
-        data.getUserData('scoresSamanta', [0]).length - 1
-      ],
-    );
+    setScorePBAC(data.getUserData('scoresPBAC', [0])[data.getUserData('scoresPBAC', [0]).length - 1]);
+    setScoreSamanta(data.getUserData('scoresSamanta', [0])[data.getUserData('scoresSamanta', [0]).length - 1]);
   }, [data]);
 
   useEffect(() => retrieveData, [retrieveData]);
@@ -77,7 +63,7 @@ const StatsScreen = ({navigation}: any) => {
       <View style={styles.mainContainer}>
         <Header />
         <TopWave />
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView style={{ width: '100%' }}>
           <View style={customStyles.container}>
             <View style={customStyles.actions}>
               <View
@@ -86,13 +72,10 @@ const StatsScreen = ({navigation}: any) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 10,
-                }}>
+                }}
+              >
                 <Pressable onPress={() => navigation.navigate('Stats')}>
-                  <Svg
-                    viewBox="0 0 192 512"
-                    height="50"
-                    width="50"
-                    fill={colors.primary}>
+                  <Svg viewBox="0 0 192 512" height="50" width="50" fill={colors.primary}>
                     <Path d="m192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142l-128.662-128.662c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z" />
                   </Svg>
                 </Pressable>
@@ -103,7 +86,8 @@ const StatsScreen = ({navigation}: any) => {
                       color: colors.primary,
                       ...styles.bold,
                       fontSize: 25,
-                    }}>
+                    }}
+                  >
                     Cycle Overview
                   </CustomText>
                   <CustomText>May 3rd 2023 - May 8th 2023</CustomText>
@@ -118,15 +102,11 @@ const StatsScreen = ({navigation}: any) => {
                   flexDirection: 'row',
                   gap: 20,
                   alignItems: 'center',
-                }}>
-                <Image
-                  source={require('./../assets/blood.png')}
-                  style={{width: 30, height: 44}}
-                />
+                }}
+              >
+                <Image source={require('./../assets/blood.png')} style={{ width: 30, height: 44 }} />
                 <View>
-                  <CustomText style={styles.textDurationStat}>
-                    Your period lasted...
-                  </CustomText>
+                  <CustomText style={styles.textDurationStat}>Your period lasted...</CustomText>
                   <CustomText style={styles.durationStat}>{duration} days</CustomText>
                 </View>
               </LinearGradient>
@@ -139,8 +119,7 @@ const StatsScreen = ({navigation}: any) => {
                   </View>
                   <View style={styles.scoreContainer}>
                     <CustomText style={styles.descriptionStat}>
-                      A score of {scorePBAC} may be a little bit high. (Write a little
-                      text based on the documentation)
+                      A score of {scorePBAC} may be a little bit high. (Write a little text based on the documentation)
                     </CustomText>
                   </View>
                 </>
@@ -150,22 +129,22 @@ const StatsScreen = ({navigation}: any) => {
                   <View style={styles.samanthaScoreContainer}>
                     <CustomText style={styles.samanthaDescriptionStat}>
                       SAMANTA Score :{'\n'}
-                      <CustomText style={styles.scoreValue}>
-                        {' '}
-                        {scoreSamanta}
-                      </CustomText>{' '}
+                      <CustomText style={styles.scoreValue}> {scoreSamanta}</CustomText>{' '}
                     </CustomText>
                   </View>
                   <View style={styles.samanthaScoreContainer}>
                     <CustomText style={styles.samanthaDescriptionStat}>
-                      A score of 24 means... (Write a little text based on the
-                      documentation)
+                      A score of 24 means... (Write a little text based on the documentation)
                     </CustomText>
                   </View>
                 </>
               </View>
               <CustomText
-                style={{textAlign: 'center', fontFamily: 'FiraSans-Medium'}}>
+                style={{
+                  textAlign: 'center',
+                  fontFamily: 'FiraSans-Medium',
+                }}
+              >
                 This is your 4th highest PBAC Score.
                 {'\n'}
                 This is your 6th highest Samantha Score.

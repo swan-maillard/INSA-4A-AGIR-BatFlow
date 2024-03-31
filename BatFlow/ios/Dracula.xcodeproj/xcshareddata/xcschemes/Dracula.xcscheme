@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Dracula.app"
-               BlueprintName = "Dracula"
-               ReferencedContainer = "container:Dracula.xcodeproj">
+               BuildableName = "BatFlow.app"
+               BlueprintName = "BatFlow"
+               ReferencedContainer = "container:BatFlow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "DraculaTests.xctest"
-               BlueprintName = "DraculaTests"
-               ReferencedContainer = "container:Dracula.xcodeproj">
+               BuildableName = "BatFlowTests.xctest"
+               BlueprintName = "BatFlowTests"
+               ReferencedContainer = "container:BatFlow.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Dracula.app"
-            BlueprintName = "Dracula"
-            ReferencedContainer = "container:Dracula.xcodeproj">
+            BuildableName = "BatFlow.app"
+            BlueprintName = "BatFlow"
+            ReferencedContainer = "container:BatFlow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Dracula.app"
-            BlueprintName = "Dracula"
-            ReferencedContainer = "container:Dracula.xcodeproj">
+            BuildableName = "BatFlow.app"
+            BlueprintName = "BatFlow"
+            ReferencedContainer = "container:BatFlow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

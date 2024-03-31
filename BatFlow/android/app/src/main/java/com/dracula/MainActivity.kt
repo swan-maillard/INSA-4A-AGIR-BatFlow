@@ -1,4 +1,4 @@
-package com.dracula
+package com.batflow
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

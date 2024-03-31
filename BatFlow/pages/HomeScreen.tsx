@@ -1,8 +1,8 @@
-import React, {useContext, useState} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import styles, {colors} from './Styles';
+import React, { useContext, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import styles, { colors } from './Styles';
 import CustomText from '../components/CustomText';
-import {DataContext} from '../context/DataContext.tsx';
+import { DataContext } from '../context/DataContext.tsx';
 
 const customStyles = StyleSheet.create({
   container: {
@@ -34,7 +34,7 @@ const customStyles = StyleSheet.create({
   },
 });
 
-const HomeScreen = ({navigation}: any) => {
+const HomeScreen = ({ navigation }: any) => {
   const data = useContext(DataContext);
   const [reset, setReset] = useState(false);
 
@@ -45,16 +45,29 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <View style={styles.body}>
-      <View style={{...styles.mainContainer, backgroundColor: colors.primary}}>
+      <View
+        style={{
+          ...styles.mainContainer,
+          backgroundColor: colors.primary,
+        }}
+      >
         <View style={customStyles.container}>
           <Text style={customStyles.title}>Bat'Flow</Text>
           <Image source={require('./../assets/logo.png')} style={styles.logo} />
           <View style={customStyles.actions}>
             <Pressable
-              style={{...styles.button, ...customStyles.loginButton}}
-              onPress={() => navigation.navigate('Login')}>
+              style={{
+                ...styles.button,
+                ...customStyles.loginButton,
+              }}
+              onPress={() => navigation.navigate('Login')}
+            >
               <CustomText
-                style={{color: colors.black, fontFamily: 'FiraSans-Medium'}}>
+                style={{
+                  color: colors.black,
+                  fontFamily: 'FiraSans-Medium',
+                }}
+              >
                 LOGIN
               </CustomText>
             </Pressable>
@@ -69,9 +82,14 @@ const HomeScreen = ({navigation}: any) => {
                 width: 150,
                 marginTop: 10,
               }}
-              onPress={() => clear()}>
+              onPress={() => clear()}
+            >
               <CustomText
-                style={{color: colors.white, fontFamily: 'FiraSans-Medium'}}>
+                style={{
+                  color: colors.white,
+                  fontFamily: 'FiraSans-Medium',
+                }}
+              >
                 RESET
               </CustomText>
             </Pressable>
