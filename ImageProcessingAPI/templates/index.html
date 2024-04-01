@@ -132,7 +132,7 @@
                 for (const [key, value] of Object.entries(probabilities)) {
                     const probabilityItem = document.createElement('p');
                     probabilityItem.classList.add('probability-item');
-                    probabilityItem.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${Math.round(value*100)}%`;
+                    probabilityItem.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${Math.round(value*1000)/10}%`;
                     probabilitiesList.appendChild(probabilityItem);
                 }
 
