@@ -1,5 +1,4 @@
-#import streamlit as st
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from PIL import Image
 from torchvision import transforms, models
 import torch
@@ -8,8 +7,6 @@ import torch.nn as nn
 import base64
 from PIL import Image
 from io import BytesIO
-
-#from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -31,18 +28,17 @@ def make_prediction(model, processed_img):
     probs, idxs = torch.sort(probs, descending=True)
     return probs, idxs
 
-
 def display_predictions(probs, idxs):
-
     class_labels = ["low", "medium", "high"]
     labels = []
+    probabilities = {}
 
     for i in range(len(probs)):
         class_label = class_labels[idxs[i]]
         labels.append(class_label)
+        probabilities[class_label] = float(probs[i])
 
-    return labels[0]
-
+    return labels[0], probabilities
 
 def convert_base64_to_rgb(image_base64):
     image_data = base64.b64decode(image_base64)
@@ -54,89 +50,42 @@ def convert_base64_to_rgb(image_base64):
 
     return image
 
-def convert_to_rgb(file_path):
-    with Image.open(file_path) as image:
-        rgb_image = image.convert('RGB')
-        rgb_file_path = os.path.splitext(file_path)[0] + '_rgb.jpg'
-        rgb_image.save(rgb_file_path)
-        return rgb_file_path
-
-
-def make_prediction(model, processed_img):
-    probs = model(processed_img)
-    probs = probs.softmax(1)
-    probs, idxs = torch.sort(probs, descending=True)
-    return probs, idxs
 
 @app.route("/")
 def home():
-    return "Home"
+    return render_template("./index.html")
 
-#this is the endpoint for entering a file (with drag and drop from a local computer)
-@app.route("/upload_PNG_JPG" , methods=['POST'])
-def returnPrediction():
-    if 'file' not in request.files:
-        return jsonify({'message': 'No file part in the request'}), 400
+@app.route("/predict", methods=['POST'])
+def predict():
+    if 'file' in request.files: # Check if file is uploaded
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'message': 'No selected file'}), 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'message': 'No selected file'}), 400
-
-    if file and (file.filename.lower().endswith('.png') or file.filename.lower().endswith(
-            '.jpg') or file.filename.lower().endswith('.jpeg')):
-
-        image = Image.open(file)
-        RGB_Image = image.convert("RGB")
-
-        preprocess = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-        ])
-
-        model_path = os.path.join(os.getcwd(), "model_fold_2.pth")
-        print(model_path)
-        model = load_model(model_path)
-        processed_img = preprocess(RGB_Image).unsqueeze(0)  # Add batch dimension
-        # Classification
-        probs, idxs = make_prediction(model, processed_img)
-
-        prediction = display_predictions(probs[0].detach().numpy(), idxs[0].detach().numpy())
-        return jsonify({'prediction': prediction}), 201
-
-    else :
-        return jsonify({'message': 'Unsupported file type'}), 400
-
-
-#this is the endpoint for sending a prediction but with a base 64 image
-@app.route('/upload', methods=['POST'])
-def upload_image():
-    data = request.get_json()
-
-    if not data or 'image' not in data:
+        if file and (file.filename.lower().endswith('.png') or file.filename.lower().endswith('.jpg') or file.filename.lower().endswith('.jpeg')):
+            image = Image.open(file)
+            RGB_Image = image.convert("RGB")
+        else:
+            return jsonify({'message': 'Unsupported file type'}), 400
+    elif 'image' in request.json: # Check if base64 encoded image is provided
+        image_data = request.json['image']
+        RGB_Image = convert_base64_to_rgb(image_data)
+    else:
         return jsonify({'message': 'No image provided'}), 400
-
-    image_data = data['image']
-    #print(image_data)
-    RGB_Image = convert_base64_to_rgb(image_data)
+    
     preprocess = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
     ])
 
     model_path = os.path.join(os.getcwd(), "model_fold_2.pth")
-    print(model_path)
     model = load_model(model_path)
     processed_img = preprocess(RGB_Image).unsqueeze(0)  # Add batch dimension
-
     # Classification
     probs, idxs = make_prediction(model, processed_img)
-    prediction = display_predictions(probs[0].detach().numpy() , idxs[0].detach().numpy() )
-    return jsonify({'prediction': prediction}), 201
 
-    if request.method == "POST":
-        data = request.get_json()
-        return jsonify(data),201
-
+    prediction, probabilities = display_predictions(probs[0].detach().numpy(), idxs[0].detach().numpy())
+    return jsonify({'prediction': prediction, 'probabilities': probabilities}), 201
 
 if __name__ == "__main__":
     app.run(debug=True)

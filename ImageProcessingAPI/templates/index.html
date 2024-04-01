@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menstrual Blood Loss Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fc0e46;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 75vw;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .upload-form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .upload-form input[type=file] {
+            display: none;
+        }
+        .upload-form label {
+            background-color: #fc0e46;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .loading-spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #fc0e46;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .prediction {
+            text-align: center;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .prediction-text {
+            font-size: 20px;
+            color: #333;
+        }
+        .probabilities {
+            text-align: left;
+            font-size: 18px;
+            color: #333;
+        }
+        .probability-item:first-child {
+            font-weight: bold;
+        }
+
+        .uploaded-image {
+            display: none;
+            max-width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Menstrual Blood Loss Classifier</h1>
+        <div class="upload-form">
+            <label for="file-upload">Upload Image</label>
+            <input type="file" id="file-upload" accept=".png, .jpg, .jpeg">
+        </div>
+        <div class="loading-spinner" id="loading-spinner"></div>
+
+        <div class="prediction" id="prediction-section">
+            <img class="uploaded-image" id="uploaded-image">
+            <span class="prediction-text" id="prediction-text"></span>
+            <div class="probabilities" id="probabilities-list"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("file-upload").addEventListener("change", async () => {
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const predictionSection = document.getElementById('prediction-section');
+
+            loadingSpinner.style.display = 'block';
+            predictionSection.style.display = 'none';
+    
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                
+                loadingSpinner.style.display = 'none';
+                predictionSection.style.display = 'flex';
+                const predictionText = document.getElementById('prediction-text');
+                predictionText.innerHTML = `Your blood loss on this picture seems to be:`;
+
+                const probabilitiesList = document.getElementById('probabilities-list');
+                probabilitiesList.innerHTML = '';
+                const probabilities = Object.fromEntries(Object.entries(data.probabilities).sort(([,a],[,b]) => b-a));
+                for (const [key, value] of Object.entries(probabilities)) {
+                    const probabilityItem = document.createElement('p');
+                    probabilityItem.classList.add('probability-item');
+                    probabilityItem.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${Math.round(value*100)}%`;
+                    probabilitiesList.appendChild(probabilityItem);
+                }
+
+                const uploadedImage = document.getElementById('uploaded-image');
+                uploadedImage.src = URL.createObjectURL(file);
+                uploadedImage.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
