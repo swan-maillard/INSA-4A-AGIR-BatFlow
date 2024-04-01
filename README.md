@@ -79,18 +79,14 @@ It accepts images in PNG or JPG formats either through direct file upload or bas
 - **Endpoint:** `/predict`
 - **Method:** POST
 - **Request Body:** Accepts either form-data with the file as 'file' or JSON with the base64 encoded image data as 'image'.
-- **Response:** Returns the predicted class label and probabilities for the uploaded image.
+- **Response:** Returns the predicted class label and probabilities for the uploaded image. The model is configured to classify images into one of three categories: `low`, `medium`, or `high`.
 - **Status Codes:**
   - 201: Successfully processed and classified the image.
   - 400: Bad request or missing image data.
 
-### Important Notes
-
-- This API utilizes a pre-trained VGG16 model for image classification.
-- The model is configured to classify images into one of three categories: `low`, `medium`, or `high`.
-- This API is for demonstration purposes and may require modifications for production use, such as authentication, error handling, and scalability improvements.
-
 ## Figma
 Mobile app mockups and poster.
+
+![A4 - 1](https://github.com/swan-maillard/AGIR/assets/58143015/baf5b157-af4c-4b33-9dfd-95857fc4e476)
 
 https://www.figma.com/file/ibNtUjrkFaB8Mssf9i7Tvs/Dracula?type=design&node-id=0%3A1&mode=dev&t=WJbBb79MwybzeAcQ-1
