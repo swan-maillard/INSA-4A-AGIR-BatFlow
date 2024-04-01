@@ -10,7 +10,10 @@
 
 ## BatFlow Mobile Application (`/BatFlow/`)
 
+![Screenshot_1711893277 (Personnalisé)](https://github.com/swan-maillard/AGIR/assets/58143015/98548fcd-253d-4c91-b59c-d11709dd73d4)
+
 ### Requirements
+
 - **Node.js:** Make sure Node.js is installed on your system to run the application.
 - **React Native Environment:** Ensure you have a React Native development environment set up on your machine.
 
@@ -56,6 +59,8 @@ Our model is trained to classify the blood loss into one of three categories: `l
 
 This API provides endpoints for image classification. 
 It accepts images in PNG or JPG formats either through direct file upload or base64 encoding.
+
+![image](https://github.com/swan-maillard/AGIR/assets/58143015/b6522b3a-fca0-4962-9b14-a2db85a623bc)
 
 ### Setup
 
