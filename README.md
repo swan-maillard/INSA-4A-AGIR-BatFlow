@@ -1,5 +1,13 @@
 # BatFlow — AGIR Project
 
+## Table of Contents
+
+- [BatFlow Mobile Application](#batflow-mobile-application-batflow)
+- [Classification Model Training](#classification-model-training-modeltraining)
+- [Image Processing API](#image-processing-api-imageprocessingapi)
+- [Figma Designs](#figma)
+
+
 ## BatFlow Mobile Application (`/BatFlow/`)
 
 ### Requirements
