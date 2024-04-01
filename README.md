@@ -7,7 +7,7 @@
 - **React Native Environment:** Ensure you have a React Native development environment set up on your machine.
 
 ### Installation
-- Run npm `install to install` the project dependencies.
+- Run `npm install` to install the project dependencies.
 - Connect your Android device to your computer or set up an Android emulator.
 - Run `npm start` to build the application.
 - Run `npm run android` to deploy the application to your Android device or emulator.
@@ -58,19 +58,15 @@ It accepts images in PNG or JPG formats either through direct file upload or bas
 
 ### Endpoints
 
-#### 1. Upload Image (PNG/JPG)
-- **Endpoint:** `/upload_PNG_JPG`
-- **Method:** POST
-- **Response:** Returns the predicted class label for the uploaded image.
-- **Status Codes:**
-  - 201: Successfully processed and classified the image.
-  - 400: Bad request, missing file, or unsupported file type.
+#### 1. Home - Upload Image File
+- **Endpoint:** `/`
+- **Description:** Renders the home page for the API, allows to manually upload an image file (png, jpg or jpeg)
 
-#### 2. Upload Base64 Encoded Image
-- **Endpoint:** `/upload`
+#### 2. Predict blood loss
+- **Endpoint:** `/predict`
 - **Method:** POST
-- **Request Body:** JSON with the base64 encoded image data as 'image'.
-- **Response:** Returns the predicted class label for the uploaded image.
+- **Request Body:** Accepts either form-data with the file as 'file' or JSON with the base64 encoded image data as 'image'.
+- **Response:** Returns the predicted class label and probabilities for the uploaded image.
 - **Status Codes:**
   - 201: Successfully processed and classified the image.
   - 400: Bad request or missing image data.
