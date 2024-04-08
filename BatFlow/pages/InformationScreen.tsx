@@ -109,11 +109,15 @@ const InformationScreen = () => {
                 >
                   <CustomText style={customStyles.titleText}>What does the Samanta score mean ?</CustomText>
                   <View style={{ marginTop: 20 }}>
-                    <CustomText style={customStyles.normalText}>0 - XX : not alarming</CustomText>
+                    <CustomText style={customStyles.normalText}>
+                      <CustomText style={{ ...customStyles.normalText, ...styles.bold }}>0 - 2 :</CustomText> Not
+                      alarming
+                    </CustomText>
                     <View style={{ marginTop: 10 }} />
-                    <CustomText style={customStyles.normalText}>XX - YY : This may indicates...</CustomText>
-                    <View style={{ marginTop: 10 }} />
-                    <CustomText style={customStyles.normalText}>YY - ZZ : This may indicates...</CustomText>
+                    <CustomText style={customStyles.normalText}>
+                      <CustomText style={{ ...customStyles.normalText, ...styles.bold }}>3 or more :</CustomText> This
+                      score indicates Heavy Menstrual Bleeding that interferes with quality of life
+                    </CustomText>
                   </View>
                 </LinearGradient>
                 <Image
@@ -127,8 +131,21 @@ const InformationScreen = () => {
               </View>
               <View style={customStyles.mediumPanelContainer}>
                 <CustomText style={customStyles.greyText}>
-                  The Samanta test is based off ... (texte écrit avec la doc) El sangrado menstrual abundante (SMA) se
-                  define como una pérdida excesiva de sangre menstrual que interfiere con la calidad de vida.
+                  The SAMANTA test is developed around six targeted questions aimed at identifying Heavy Menstrual
+                  Bleeding (HMB). SAMANTA questionnaire was created by a committee of HMB-expert gynaecologists.
+                </CustomText>
+                <View style={{ marginTop: 10 }} />
+                <CustomText style={customStyles.greyText}>
+                  Initially, an extensive literature review was conducted to identify pertinent questionnaires and
+                  concepts related to HMB and its impact on Health-Related Quality of Life (HRQoL). These questions
+                  underwent rigorous cognitive interviews with a sample of women experiencing HMB to ensure clarity and
+                  relevance.
+                </CustomText>
+                <View style={{ marginTop: 10 }} />
+                <CustomText style={customStyles.greyText}>
+                  The SAMANTA questionnaire presented high sensitivity (86.7%) and specificity (89.5%), with a positive
+                  predictive value of 92.0%, a nega- tive predictive value of 83% and a discriminatory capacity of
+                  87.9%.
                 </CustomText>
               </View>
               <View
@@ -153,18 +170,40 @@ const InformationScreen = () => {
                 >
                   <CustomText style={customStyles.titleText}>What does the PBAC score mean ?</CustomText>
                   <View style={{ marginTop: 20 }}>
-                    <CustomText style={customStyles.normalText}>0 - XX : not alarming</CustomText>
+                    <CustomText style={customStyles.normalText}>
+                      <CustomText style={{ ...customStyles.normalText, ...styles.bold }}>0 - 99 :</CustomText> Not
+                      alarming
+                    </CustomText>
                     <View style={{ marginTop: 10 }} />
-                    <CustomText style={customStyles.normalText}>XX - YY : This may indicates...</CustomText>
+                    <CustomText style={customStyles.normalText}>
+                      <CustomText style={{ ...customStyles.normalText, ...styles.bold }}>100 - 149 :</CustomText> This
+                      may indicates that your menstrual bleeding flow is higher that normal
+                    </CustomText>
                     <View style={{ marginTop: 10 }} />
-                    <CustomText style={customStyles.normalText}>YY - ZZ : This may indicates...</CustomText>
+                    <CustomText style={customStyles.normalText}>
+                      <CustomText style={{ ...customStyles.normalText, ...styles.bold }}>150 or more :</CustomText> Such
+                      a score seems highly correlated with a Heavy Menstrual Bleeding, please seek medical advice
+                    </CustomText>
                   </View>
                 </LinearGradient>
               </View>
               <View style={customStyles.mediumPanelContainer}>
                 <CustomText style={customStyles.greyText}>
-                  The PBAC test is based off ... (texte écrit avec la doc) El sangrado menstrual abundante (SMA) se
-                  define como una pérdida excesiva de sangre menstrual que interfiere con la calidad de vida.
+                  The Pictorial Blood Loss Assessment Chart (PBAC) is based off semi-quantitative methods. The PBAC
+                  combines the number of sanitary pads or tampons used during menstruation and their level of
+                  impregnation to assess menstrual blood loss. Patients complete the chart over their menstruation
+                  period, scoring points for each pad used based on its degree of saturation.
+                </CustomText>
+                <View style={{ marginTop: 10 }} />
+                <CustomText style={customStyles.greyText}>
+                  A cummulated score above 100 on the PBAC has been associated with menstrual blood loss greater than 80
+                  ml, making it a commonly used tool in clinical research. However, it requires significant time and
+                  effort from both the patient, who collects data, and the doctor, who evaluates the charts.
+                </CustomText>
+                <View style={{ marginTop: 10 }} />
+                <CustomText style={customStyles.greyText}>
+                  Additionally, the PBAC may not be valid for all types of menstrual products and does not assess the
+                  quality of life related to bleeding.
                 </CustomText>
               </View>
             </View>

@@ -37,7 +37,7 @@ const StatsScreen = ({ navigation, route }: any) => {
     return Math.round((end.getTime() - start.getTime()) / (1000 * 3600 * 24) + 1);
   }, [cycle]);
 
-  const isHealthy = useMemo(() => scorePBAC < 90 && (scoreSamanta < 3 || !scoreSamanta), [scorePBAC, scoreSamanta]);
+  const isHealthy = useMemo(() => scorePBAC < 150 && (scoreSamanta < 3 || !scoreSamanta), [scorePBAC, scoreSamanta]);
 
   const customStyles = StyleSheet.create({
     container: {
@@ -174,7 +174,7 @@ const StatsScreen = ({ navigation, route }: any) => {
                         ...styles.bold,
                         fontSize: 25,
                         textAlign: 'center',
-                        color: scorePBAC < 90 ? colors.green : colors.primary,
+                        color: scorePBAC < 150 ? colors.green : colors.primary,
                       }}
                     >
                       {scorePBAC}
@@ -217,9 +217,9 @@ const StatsScreen = ({ navigation, route }: any) => {
                 </View>
 
                 <CustomText style={{ textAlign: 'center' }}>
-                  A PBAC score <CustomText style={styles.bold}>greater than 90</CustomText> or a Samanta score{' '}
-                  <CustomText style={styles.bold}>greater than 3</CustomText> might indicate that you suffer from Heavy
-                  Menstrual Bleeding.
+                  A PBAC score <CustomText style={styles.bold}>greater or equal to 150</CustomText> or a Samanta score{' '}
+                  <CustomText style={styles.bold}>greater or equal to 3</CustomText> might indicate that you suffer from
+                  Heavy Menstrual Bleeding.
                 </CustomText>
               </View>
             </View>

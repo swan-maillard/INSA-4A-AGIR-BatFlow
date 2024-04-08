@@ -33,7 +33,7 @@ const StatsScreen = ({ navigation }: any) => {
   navigation.addListener('focus', () => retrieveData());
 
   const hasStats = useMemo(() => cycles.length > 0 && cycles[0].length === 2, [cycles]);
-  const isHealthy = useMemo(() => scorePBAC < 90 && scoreSamanta < 3, [scorePBAC, scoreSamanta]);
+  const isHealthy = useMemo(() => scorePBAC < 150 && scoreSamanta < 3, [scorePBAC, scoreSamanta]);
 
   // Fonction pour transformer des périodes (tableaux avec date de début et date de fin)
   // en markedDates (https://github.com/wix/react-native-calendars?tab=readme-ov-file#customize-the-appearance-of-the-calendar)
@@ -176,7 +176,7 @@ const StatsScreen = ({ navigation }: any) => {
                             ...styles.bold,
                             fontSize: 25,
                             textAlign: 'center',
-                            color: scorePBAC < 90 ? colors.green : colors.primary,
+                            color: scorePBAC < 150 ? colors.green : colors.primary,
                           }}
                         >
                           {scorePBAC}
