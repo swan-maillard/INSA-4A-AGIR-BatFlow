@@ -15,7 +15,7 @@ const AddSanitoryProductScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     if (fileBase64) {
-      fetch('https://bfbb-134-214-58-69.ngrok-free.app/predict', {
+      fetch('https://2633-37-169-54-124.ngrok-free.app/predict', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

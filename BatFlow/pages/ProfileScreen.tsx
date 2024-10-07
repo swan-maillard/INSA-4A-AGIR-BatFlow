@@ -49,9 +49,8 @@ const ProfileScreen = ({ navigation }: any) => {
     const today = new Date();
     const diff = Math.floor((today.getTime() - lastEndDate.getTime()) / (1000 * 3600 * 24));
     const gapDuration = data.getUserData<number>('averageGapDuration', 28);
-
     return gapDuration - diff;
-  }, [data, lastCycle, noDataOnCycle]);
+  }, [data, lastCycle.length, noDataOnCycle]);
 
   // L'utilisateur termine son cycle en cours
   const endCycle = () => {
