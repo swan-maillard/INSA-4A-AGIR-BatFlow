@@ -1,12 +1,12 @@
 # BatFlow — AGIR Project
 
-## Table of Contents
+## Project Overview
 
-- [BatFlow Mobile Application](#batflow-mobile-application-batflow)
-- [Classification Model Training](#classification-model-training-modeltraining)
-- [Image Processing API](#image-processing-api-imageprocessingapi)
-- [Figma Designs](#figma)
+**BatFlow** is a multi-faceted project aimed at improving the management of menstrual health through a mobile app and the use of image classification technology. The project encompasses several key components:
 
+1. **BatFlow Mobile Application**: A mobile app developed using React Native, designed to track and monitor menstrual health and bleeding intensity.
+2. **Classification Model Training**: A deep learning model built on the VGG-16 architecture for classifying menstrual blood loss into three categories (`low`, `medium`, `high`).
+3. **Image Processing API**: A Flask-based API to handle image uploads and classify the amount of blood loss using the pre-trained model.
 
 ## BatFlow Mobile Application (`/BatFlow/`)
 
@@ -90,3 +90,15 @@ Mobile app mockups and poster.
 ![A4 - 1](https://github.com/swan-maillard/AGIR/assets/58143015/baf5b157-af4c-4b33-9dfd-95857fc4e476)
 
 https://www.figma.com/file/ibNtUjrkFaB8Mssf9i7Tvs/Dracula?type=design&node-id=0%3A1&mode=dev&t=WJbBb79MwybzeAcQ-1
+
+## Authors
+
+- Swan Maillard (maillard.swan@gmail.com)
+- Sarah Malard (sarah.malard@insa-lyon.fr)
+- Le Tuan Khai Nguyen (le.nguyen@insa-lyon.fr)
+- Mathis Nguyen (mathis.nguyen@insa-lyon.fr)
+- Mohamed-Ali Lajnef (mohamed-ali.lajnef@insa-lyon.fr)
+
+## License
+
+This project is licensed under the MIT License. Please consult the `LICENSE` file for more information.
